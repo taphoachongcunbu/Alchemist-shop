@@ -3,279 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
-  <title>Tiệm Phù Thủy Giả Kim</title>
+  <title>Tiệm Giả Kim Phù Thủy</title>
   <style>
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      user-select: none;
     }
     body {
-      background: #12111a;
-      color: #f1edfa;
+      background: #110e1b;
+      color: #f0eafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       justify-content: center;
       min-height: 100vh;
     }
-    /* Khung ứng dụng Mobile */
     .app-screen {
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      background: #1a1829;
+      background: #191627;
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 74px; /* Chừa chỗ cho thanh menu dưới */
-      box-shadow: 0 0 25px rgba(0,0,0,0.8);
+      padding-bottom: 70px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
     }
-    
-    /* Header thông tin */
+
+    /* Header */
     header {
-      background: linear-gradient(180deg, #2b2347 0%, #1a1829 100%);
+      background: #25203b;
       padding: 12px 16px;
-      border-bottom: 1px solid #3d3561;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid #3c345c;
     }
-    .shop-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #d1b3ff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .stats-pill {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid #584b80;
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 0.85rem;
+    .gold-box {
+      background: #13111f;
+      border: 1px solid #eab308;
+      color: #facc15;
       font-weight: bold;
-      color: #ffd166;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
     }
 
-    /* Các Tab nội dung */
-    .tab-content {
-      display: none;
-      padding: 14px;
-      flex: 1;
-    }
-    .tab-content.active {
-      display: block;
-    }
+    /* Tab Switcher */
+    .tab-view { display: none; padding: 12px; flex: 1; }
+    .tab-view.active { display: block; }
 
-    /* Thẻ Container */
-    .card {
-      background: #25223b;
-      border: 1px solid #3d3663;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    /* KHU VỰC KHÁCH HÀNG (Ở TRÊN) */
+    .customer-counter {
+      background: #231e38;
+      border: 1px solid #433868;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
-    .card h3 {
-      font-size: 0.95rem;
-      color: #e0d4ff;
-      margin-bottom: 10px;
+    .customer-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      border-bottom: 1px solid #373059;
-      padding-bottom: 6px;
+      gap: 10px;
+    }
+    .customer-avatar {
+      font-size: 2.2rem;
+      background: #1a162b;
+      padding: 6px;
+      border-radius: 50%;
+      border: 1px solid #5d4e8c;
+    }
+    .order-bubble {
+      flex: 1;
+      background: #2f284c;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border-left: 3px solid #a855f7;
+      font-size: 0.85rem;
+    }
+    .order-bubble b { color: #facc15; }
+    .recipe-req {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
     }
 
-    /* Bản đồ thu hoạch dạng Grid nút cảm ứng */
+    /* Thanh kiên nhẫn */
+    .patience-bar {
+      height: 8px;
+      background: #12101c;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .patience-fill {
+      height: 100%;
+      width: 100%;
+      background: #22c55e;
+      transition: width 0.15s linear;
+    }
+
+    /* KHU VỰC BÀN NẤU & CÁI VẠC (Ở DƯỚI KHÁCH) */
+    .brewing-bench {
+      background: #231e38;
+      border: 1px solid #433868;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .bench-title {
+      font-size: 0.9rem;
+      color: #c084fc;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Hình cái vạc & Cái muỗng trực quan */
+    .cauldron-area {
+      height: 125px;
+      background: #161324;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px dashed #4e4376;
+      margin-bottom: 10px;
+    }
+    .cauldron-graphic {
+      font-size: 4rem;
+      position: relative;
+      display: inline-block;
+    }
+    .spoon-graphic {
+      position: absolute;
+      font-size: 2.2rem;
+      top: -15px;
+      right: -10px;
+      transform-origin: bottom center;
+      transition: transform 0.15s;
+    }
+    .stirring {
+      animation: stirAnimation 0.4s infinite alternate;
+    }
+    @keyframes stirAnimation {
+      0% { transform: rotate(-25deg) translateY(0); }
+      100% { transform: rotate(20deg) translateY(4px); }
+    }
+    .pot-status-text {
+      font-size: 0.82rem;
+      font-weight: bold;
+      color: #93c5fd;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* Nút thả nguyên liệu */
+    .ingredient-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .btn-ingredient {
+      background: #312952;
+      border: 1px solid #57488a;
+      color: #fff;
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-ingredient:active { transform: scale(0.96); background: #4a3e79; }
+    .btn-ingredient small { display: block; font-size: 0.7rem; color: #facc15; }
+
+    /* Thanh khuấy & Nút khuấy */
+    .stir-box {
+      margin-bottom: 10px;
+    }
+    .gauge-bg {
+      height: 14px;
+      background: #141221;
+      border-radius: 7px;
+      overflow: hidden;
+      margin: 4px 0 8px 0;
+      border: 1px solid #3c345c;
+    }
+    .stir-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      transition: width 0.1s;
+    }
+    .btn-stir {
+      width: 100%;
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn-stir:active { filter: brightness(1.2); }
+
+    /* Nút giao cho khách */
+    .btn-deliver {
+      width: 100%;
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+    }
+    .btn-deliver:active { transform: scale(0.98); }
+
+    /* CÔNG THỨC & NÚT DỌN VẠC */
+    .mini-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .btn-small {
+      background: transparent;
+      border: 1px solid #57488a;
+      color: #cbd5e1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+
+    /* BẢN ĐỒ THU HOẠCH */
     .map-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 10px;
     }
-    .map-btn {
-      background: #2c2847;
-      border: 1.5px solid #4a3e75;
-      border-radius: 12px;
-      padding: 14px 10px;
-      text-align: center;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.15s active;
-    }
-    .map-btn:active {
-      transform: scale(0.96);
-      background: #3c3461;
-      border-color: #a855f7;
-    }
-    .map-btn .icon { font-size: 2rem; }
-    .map-btn .name { font-weight: bold; font-size: 0.85rem; }
-    .map-btn .reward { font-size: 0.75rem; color: #a59fc4; }
-
-    /* Thanh tiến trình chung */
-    .progress-bar {
-      height: 14px;
-      background: #141221;
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 8px 0;
-      position: relative;
-      border: 1px solid #3c345c;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #a855f7;
-      transition: width 0.1s linear;
-    }
-    .safe-zone {
-      position: absolute;
-      left: 45%;
-      width: 30%;
-      height: 100%;
-      background: rgba(34, 197, 94, 0.4);
-      border-left: 2px solid #22c55e;
-      border-right: 2px solid #22c55e;
-    }
-
-    /* Các nút bấm thao tác */
-    .btn-action {
-      width: 100%;
-      background: #7952b3;
-      border: none;
-      color: white;
-      font-weight: 700;
-      padding: 12px;
+    .map-card {
+      background: #241e3a;
+      border: 1px solid #4d3e7a;
       border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      margin-top: 6px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-action:active { filter: brightness(1.2); transform: scale(0.98); }
-    .btn-action:disabled { background: #3b3554; color: #777; cursor: not-allowed; }
-    .btn-green { background: #16a34a; }
-    .btn-orange { background: #ea580c; }
-    .btn-blue { background: #0284c7; }
-
-    /* Lựa chọn Decor Nơ */
-    .decor-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .decor-btn {
-      flex: 1;
-      background: #2e284a;
-      border: 1.5px solid #493e73;
-      color: #fff;
-      padding: 8px 4px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .decor-btn.active {
-      border-color: #ffd166;
-      background: #443770;
-    }
-
-    /* Túi đồ hiển thị dạng thẻ nhỏ */
-    .inventory-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .inv-item {
-      background: #1d1a2f;
-      border: 1px solid #3c345c;
-      border-radius: 8px;
-      padding: 8px 4px;
+      padding: 14px;
       text-align: center;
-      font-size: 0.75rem;
+      cursor: pointer;
     }
-    .inv-item .count {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #ffd166;
-      display: block;
-      margin-top: 2px;
-    }
+    .map-card:active { transform: scale(0.96); background: #372d59; }
+    .map-card .icon { font-size: 2.2rem; }
+    .map-card .name { font-weight: bold; font-size: 0.85rem; margin-top: 4px; }
+    .map-card .info { font-size: 0.75rem; color: #a59fc4; }
 
-    /* Trạng thái mở tiệm */
-    .status-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-    .status-closed { background: #6b21a8; color: #f3e8ff; }
-    .status-open { background: #15803d; color: #dcfce7; }
-
-    /* Thanh điều hướng cố định dưới đáy Mobile */
-    .nav-bar {
+    /* Thanh Menu đáy */
+    .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
       max-width: 480px;
-      height: 64px;
-      background: #171524;
-      border-top: 1px solid #362f52;
+      height: 60px;
+      background: #151222;
+      border-top: 1px solid #332b4d;
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 100;
     }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #8b82a8;
-      font-size: 0.7rem;
-      font-weight: 600;
-      cursor: pointer;
-      gap: 3px;
+    .nav-tab {
       flex: 1;
-      height: 100%;
+      text-align: center;
+      color: #7d729c;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
     }
-    .nav-item.active {
-      color: #d1b3ff;
-    }
-    .nav-item .icon { font-size: 1.3rem; }
+    .nav-tab.active { color: #d8b4fe; }
+    .nav-tab .icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 
-    /* Overlay thám hiểm */
-    #gather-modal {
+    /* Modal chờ thám hiểm */
+    #gather-overlay {
       display: none;
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(10, 8, 18, 0.85);
-      z-index: 50;
+      z-index: 200;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      text-align: center;
     }
-    #gather-modal .box {
-      background: #25223b;
-      padding: 20px;
-      border-radius: 16px;
-      border: 1px solid #4a3e75;
-      width: 85%;
+    .gather-box {
+      background: #231e38;
+      border: 1px solid #57488a;
+      border-radius: 12px;
+      padding: 18px;
+      width: 80%;
+      text-align: center;
     }
   </style>
 </head>
@@ -284,379 +317,383 @@
   <div class="app-screen">
     <!-- Header -->
     <header>
-      <div class="shop-title">🧹 Phù Thủy Giả Kim</div>
-      <div class="stats-pill">💰 <span id="val-gold">50</span> Vàng</div>
+      <div style="font-weight: bold; color: #d8b4fe;">🧙‍♀️ Tiệm Phù Thủy</div>
+      <div class="gold-box">💰 <span id="val-gold">50</span> Vàng</div>
     </header>
 
-    <!-- Modal Hái đồ đếm ngược -->
-    <div id="gather-modal">
-      <div class="box">
-        <h3 id="gather-title" style="margin-bottom: 10px;">Đang thu hoạch...</h3>
-        <div class="progress-bar">
-          <div id="gather-bar" class="progress-fill"></div>
-        </div>
-        <p style="font-size: 0.8rem; color: #a9a2c9; margin-top: 8px;">Vui lòng đợi giây lát</p>
-      </div>
-    </div>
-
-    <!-- TAB 1: BẢN ĐỒ THU HOẠCH -->
-    <div id="tab-map" class="tab-content active">
-      <div class="card">
-        <h3>🗺️ Vùng Đất Phép Thuật</h3>
-        <p style="font-size: 0.8rem; color: #aaa;">Thời tiết hiện tại: <b id="weather-label" style="color: #ffd166;">Nắng ráo ☀️</b></p>
-        
-        <div class="map-grid">
-          <div class="map-btn" onclick="gatherItem('lake')">
-            <span class="icon">💧</span>
-            <span class="name">Suối Thần</span>
-            <span class="reward">+2 Nước suối</span>
-          </div>
-          <div class="map-btn" onclick="gatherItem('forest')">
-            <span class="icon">🍄</span>
-            <span class="name">Rừng Nấm</span>
-            <span class="reward" id="forest-reward">+2 Nấm đỏ</span>
-          </div>
-          <div class="map-btn" onclick="gatherItem('meadow')">
-            <span class="icon">🌿</span>
-            <span class="name">Đồng Cỏ</span>
-            <span class="reward">+2 Thảo mộc</span>
-          </div>
-          <div class="map-btn" onclick="gatherItem('cave')">
-            <span class="icon">💎</span>
-            <span class="name">Hang Đá</span>
-            <span class="reward">+1 Đá phép</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Túi đồ mini -->
-      <div class="card">
-        <h3>🎒 Kho Nguyên Liệu Hiện Có</h3>
-        <div class="inventory-grid">
-          <div class="inv-item">💧 Nước<span class="count" id="inv-water">2</span></div>
-          <div class="inv-item">🍄 Nấm<span class="count" id="inv-mushroom">2</span></div>
-          <div class="inv-item">🌿 Cỏ<span class="count" id="inv-herb">2</span></div>
-          <div class="inv-item">💎 Đá<span class="count" id="inv-crystal">0</span></div>
+    <!-- Modal khi đi nhặt đồ -->
+    <div id="gather-overlay">
+      <div class="gather-box">
+        <h4 id="gather-name" style="margin-bottom: 8px;">Đang thu hoạch...</h4>
+        <div class="gauge-bg">
+          <div id="gather-progress-bar" style="height:100%; width:0%; background:#a855f7; transition:width 0.1s linear;"></div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: VẠC NẤU THUỐC -->
-    <div id="tab-brew" class="tab-content">
-      <div class="card">
-        <h3>⚗️ Vạc Nấu Potion</h3>
-        
-        <!-- Bước 1: Nước -->
-        <div style="margin-bottom: 12px;">
-          <div style="font-size: 0.85rem; margin-bottom: 4px;">1. Dung môi trong vạc: <b id="pot-water-status" style="color: #f87171;">Chưa có nước ❌</b></div>
-          <button class="btn-action btn-blue" onclick="addWaterToPot()">Đổ thêm nước vào vạc 💧</button>
-        </div>
-
-        <!-- Bước 2: Canh Lửa -->
-        <div style="margin-bottom: 12px;">
-          <div style="font-size: 0.85rem;">2. Giữ nhiệt lửa (Trong vạch xanh):</div>
-          <div class="progress-bar">
-            <div class="safe-zone"></div>
-            <div id="pot-heat-bar" class="progress-fill" style="background: #f97316;"></div>
-          </div>
-          <button class="btn-action btn-orange" onclick="pumpHeat()">Thổi Lửa Bễ 🔥</button>
-        </div>
-
-        <!-- Bước 3: Khuấy -->
-        <div style="margin-bottom: 12px;">
-          <div style="font-size: 0.85rem;">3. Độ hòa tan (Khuấy trên 80%):</div>
-          <div class="progress-bar">
-            <div id="pot-stir-bar" class="progress-fill" style="background: #06b6d4;"></div>
-          </div>
-          <button class="btn-action" onclick="stirPot()">Khuấy Vạc 🥄</button>
-        </div>
-
-        <!-- Bước 4: Trang trí nơ -->
-        <div>
-          <div style="font-size: 0.85rem;">4. Chọn nơ đính kèm:</div>
-          <div class="decor-group">
-            <button class="decor-btn" id="btn-decor-red" onclick="selectDecor('Đỏ')">Nơ Đỏ 🎀</button>
-            <button class="decor-btn" id="btn-decor-blue" onclick="selectDecor('Xanh')">Nơ Xanh 🎗️</button>
-          </div>
-        </div>
-
-        <button class="btn-action btn-green" style="margin-top: 15px;" onclick="deliverPotion()">
-          ✨ Đóng Bình & Giao Khách (Tính Điểm ⭐)
-        </button>
-      </div>
-    </div>
-
-    <!-- TAB 3: QUẦY TIỆM (BÁN HÀNG) -->
-    <div id="tab-shop" class="tab-content">
-      <div class="card">
-        <h3>🏪 Quản Lý Quầy Tiệm</h3>
-        <p style="font-size: 0.85rem; margin-bottom: 10px;">
-          Trạng thái quán: <span id="shop-badge" class="status-badge status-closed">Đang Đóng Cửa (Chuẩn bị)</span>
-        </p>
-        
-        <button id="btn-toggle-shop" class="btn-action btn-green" onclick="toggleShop()">
-          🔔 MỞ CỬA TIỆM ĐÓN KHÁCH
+    <!-- ==================== TAB 1: QUẦY TIỆM & VẠC PHA CHẾ (GỘP CHUNG) ==================== -->
+    <div id="view-shop" class="tab-view active">
+      
+      <!-- Nút Mở / Đóng cửa -->
+      <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem;">Trạng thái quán:</span>
+        <button id="btn-toggle-shop" onclick="toggleShop()" style="padding: 6px 12px; font-weight: bold; border-radius: 6px; border: none; background: #22c55e; color: white; cursor: pointer;">
+          🔔 MỞ TIỆM BÁN
         </button>
       </div>
 
-      <div class="card" id="customer-box">
-        <h3>👤 Khách Mua Hàng</h3>
-        <div id="customer-info" style="font-size: 0.85rem; color: #a59fc4; padding: 10px 0;">
-          Tiệm đang đóng cửa chuẩn bị đồ. Khi nào sẵn sàng, hãy bấm nút "Mở Cửa" ở trên!
-        </div>
-        <div id="patience-wrap" style="display: none;">
-          <div style="font-size: 0.8rem; margin-top: 6px;">Thanh kiên nhẫn của khách:</div>
-          <div class="progress-bar">
-            <div id="patience-fill" class="progress-fill" style="background: #22c55e; width: 100%;"></div>
+      <!-- Khu vực khách đang đứng mua -->
+      <div class="customer-counter">
+        <div class="customer-header">
+          <div class="customer-avatar" id="cust-avatar">🧝‍♂️</div>
+          <div class="order-bubble">
+            <div id="cust-dialog">Tiệm đang đóng cửa chuẩn bị. Hãy bấm <b>Mở Tiệm Bán</b> khi sẵn sàng!</div>
+            <div class="recipe-req" id="cust-recipe"></div>
           </div>
         </div>
+        <div class="patience-bar">
+          <div id="patience-fill" class="patience-fill"></div>
+        </div>
       </div>
+
+      <!-- Khu vực Vạc Nấu & Muỗng Pha Chế -->
+      <div class="brewing-bench">
+        <div class="bench-title">
+          <span>⚗️ VẠC PHA CHẾ TRỰC TIẾP</span>
+          <span id="recipe-hint" style="font-size: 0.75rem; color: #facc15;"></span>
+        </div>
+
+        <!-- Hình ảnh vạc + muỗng -->
+        <div class="cauldron-area">
+          <div class="cauldron-graphic">
+            <span id="spoon-icon" class="spoon-graphic">🥄</span>
+            🍲
+          </div>
+          <div id="pot-status" class="pot-status-text">Vạc đang trống. Hãy bỏ nguyên liệu vào!</div>
+        </div>
+
+        <!-- 3 Nút bỏ nguyên liệu trực tiếp -->
+        <div style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px;">1. Bấm để thả vào vạc (Kho còn):</div>
+        <div class="ingredient-actions">
+          <button class="btn-ingredient" onclick="dropIngredient('water')">
+            💧 Thả Nước
+            <small>Kho: <span id="cnt-water">2</span></small>
+          </button>
+          <button class="btn-ingredient" onclick="dropIngredient('mushroom')">
+            🍄 Thả Nấm
+            <small>Kho: <span id="cnt-mushroom">2</span></small>
+          </button>
+          <button class="btn-ingredient" onclick="dropIngredient('herb')">
+            🌿 Thả Cỏ
+            <small>Kho: <span id="cnt-herb">2</span></small>
+          </button>
+        </div>
+
+        <!-- Khuấy vạc -->
+        <div class="stir-box">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <span>2. Độ sánh mịn của thuốc:</span>
+            <b id="stir-val" style="color: #38bdf8;">0%</b>
+          </div>
+          <div class="gauge-bg">
+            <div id="stir-fill" class="stir-fill"></div>
+          </div>
+          <button class="btn-stir" onclick="stirPotion()">🥄 KHUẤY VẠC THUỐC</button>
+        </div>
+
+        <!-- Giao cho khách -->
+        <button class="btn-deliver" onclick="deliverOrder()">
+          ✨ GIAO CHO KHÁCH & NHẬN TIỀN
+        </button>
+
+        <div class="mini-actions">
+          <button class="btn-small" onclick="clearPot()">🧹 Đổ Bỏ Vạc Nấu Lại</button>
+          <span style="font-size: 0.72rem; color: #94a3b8;">Cần đủ đồ + khuấy 100% để giao</span>
+        </div>
+      </div>
+
     </div>
 
-    <!-- TAB 4: SỔ HƯỚNG DẪN -->
-    <div id="tab-book" class="tab-content">
-      <div class="card">
-        <h3>📖 Sổ Tay Pháp Sư Giả Kim</h3>
-        <div style="font-size: 0.82rem; line-height: 1.5; color: #c4bcdc;">
-          <p><b>Quy trình 1 ngày làm việc:</b></p>
-          <p>1. <b>Giai đoạn Chuẩn bị:</b> Sang tab <b>Bản đồ 🗺️</b> để múc nước ở Suối Thần và hái nấm/cỏ. Bạn không bị hối thúc lúc này.</p>
-          <br>
-          <p>2. <b>Mở cửa đón khách:</b> Vào tab <b>Quầy tiệm 🏪</b> và bấm <i>"Mở Cửa Tiệm"</i>. Khách sẽ tới và nêu yêu cầu (ví dụ: cần nơ đỏ hay xanh).</p>
-          <br>
-          <p>3. <b>Pha chế:</b> Chuyển sang tab <b>Bếp 🧪</b>:</p>
-          <ul style="margin-left: 20px;">
-            <li>Bấm <b>Đổ nước vào vạc</b> (tốn 1 bình nước).</li>
-            <li>Bấm <b>Thổi lửa</b> để đẩy nhiệt vào <i>vạch xanh lá</i> (nhiệt tự giảm dần).</li>
-            <li>Bấm <b>Khuấy</b> để thanh đạt trên 80%.</li>
-            <li>Chọn đúng <b>Nơ Decor</b> theo gu khách.</li>
-            <li>Bấm <b>Đóng Bình & Giao</b>!</li>
-          </ul>
-          <br>
-          <p>4. <b>Chấm điểm (Rating):</b> Canh đúng vạch lửa + decor đúng ý khách = <b>5 Sao</b> và nhiều tiền thưởng!</p>
+    <!-- ==================== TAB 2: BẢN ĐỒ THU HOẠCH ==================== -->
+    <div id="view-map" class="tab-view">
+      <div style="font-size: 0.85rem; margin-bottom: 8px;">
+        Chạm vào khu vực để phù thủy đi hái nguyên liệu:
+      </div>
+      <div class="map-grid">
+        <div class="map-card" onclick="gather('lake')">
+          <div class="icon">💧</div>
+          <div class="name">Suối Thần</div>
+          <div class="info">+2 Nước suối</div>
+        </div>
+        <div class="map-card" onclick="gather('forest')">
+          <div class="icon">🍄</div>
+          <div class="name">Rừng Nấm</div>
+          <div class="info">+2 Nấm đỏ</div>
+        </div>
+        <div class="map-card" onclick="gather('meadow')">
+          <div class="icon">🌿</div>
+          <div class="name">Đồng Cỏ Thơm</div>
+          <div class="info">+2 Thảo mộc</div>
+        </div>
+        <div class="map-card" onclick="gather('shop')">
+          <div class="icon">🛒</div>
+          <div class="name">Lái Buôn</div>
+          <div class="info">Mua sỉ khẩn cấp</div>
+        </div>
+      </div>
+
+      <!-- Sổ tay công thức -->
+      <div style="background: #241e3a; border: 1px solid #4d3e7a; border-radius: 10px; padding: 12px; margin-top: 14px;">
+        <h4 style="color: #facc15; margin-bottom: 6px;">📖 Sổ Tay Công Thức Pha Chế:</h4>
+        <div style="font-size: 0.8rem; line-height: 1.6; color: #cbd5e1;">
+          • <b>Bình Hồi Phục:</b> Cần 1 💧 Nước + 1 🍄 Nấm + 1 🌿 Cỏ (Giá: 35💰)<br>
+          • <b>Bình Trí Tuệ:</b> Cần 1 💧 Nước + 2 🌿 Cỏ (Giá: 30💰)<br>
+          • <b>Bình Sức Mạnh:</b> Cần 1 💧 Nước + 2 🍄 Nấm (Giá: 40💰)
         </div>
       </div>
     </div>
 
-    <!-- Menu Đáy (Mobile Navigation) -->
-    <div class="nav-bar">
-      <div class="nav-item active" onclick="switchTab('tab-map', this)">
-        <span class="icon">🗺️</span>
-        <span>Bản Đồ</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('tab-brew', this)">
-        <span class="icon">🧪</span>
-        <span>Pha Chế</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('tab-shop', this)">
+    <!-- Menu Điều Hướng Đáy -->
+    <div class="bottom-nav">
+      <div class="nav-tab active" onclick="switchTab('view-shop', this)">
         <span class="icon">🏪</span>
-        <span>Quầy Tiệm</span>
+        <span>Quầy & Nấu</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-book', this)">
-        <span class="icon">📖</span>
-        <span>Sổ Phép</span>
+      <div class="nav-tab" onclick="switchTab('view-map', this)">
+        <span class="icon">🗺️</span>
+        <span>Hái Đồ</span>
       </div>
     </div>
   </div>
 
   <script>
-    // --- 1. DỮ LIỆU GAME ---
+    // --- 1. DỮ LIỆU & KHO ĐỒ ---
     let gold = 50;
-    const inv = { water: 2, mushroom: 2, herb: 2, crystal: 0 };
-    let weather = "sunny";
+    const inv = { water: 3, mushroom: 3, herb: 3 };
     let isShopOpen = false;
 
-    // Vạc thuốc
-    let potHasWater = false;
-    let potHeat = 20;
-    let potStir = 0;
-    let selectedDecor = "";
+    // Danh sách món khách có thể gọi
+    const RECIPES = {
+      heal: { name: "Bình Hồi Phục", water: 1, mushroom: 1, herb: 1, price: 35 },
+      mana: { name: "Bình Trí Tuệ", water: 1, mushroom: 0, herb: 2, price: 30 },
+      power: { name: "Bình Sức Mạnh", water: 1, mushroom: 2, herb: 0, price: 40 }
+    };
 
-    // Khách hàng
+    // Vạc đang nấu
+    let pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
+
+    // Khách hàng hiện tại
     let currentCustomer = null;
-    let patience = 100;
-    let customerTimer = null;
+    let customerPatience = 100;
+    let patienceTimer = null;
 
-    // --- 2. CHUYỂN TAB MOBILE ---
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      el.classList.add('active');
+    // --- 2. ĐIỀU HƯỚNG TAB ---
+    function switchTab(viewId, tabEl) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      tabEl.classList.add('active');
     }
 
-    // --- 3. HÁI ĐỒ DẠNG MODAL ĐẾM GIÂY ---
-    function gatherItem(spot) {
-      const modal = document.getElementById("gather-modal");
-      const bar = document.getElementById("gather-bar");
-      const title = document.getElementById("gather-title");
-
-      const names = { lake: "Suối Thần 💧", forest: "Rừng Nấm 🍄", meadow: "Đồng Cỏ 🌿", cave: "Hang Đá 💎" };
-      title.innerText = `Đang lấy đồ tại ${names[spot]}...`;
-      modal.style.display = "flex";
-      bar.style.width = "0%";
-
-      let p = 0;
-      const t = setInterval(() => {
-        p += 10;
-        bar.style.width = p + "%";
-        if (p >= 100) {
-          clearInterval(t);
-          modal.style.display = "none";
-          // Nhận phần thưởng
-          if (spot === 'lake') inv.water += 2;
-          if (spot === 'forest') inv.mushroom += (weather === 'sunny' ? 2 : 1);
-          if (spot === 'meadow') inv.herb += 2;
-          if (spot === 'cave') inv.crystal += 1;
-          updateUI();
-        }
-      }, 80);
-    }
-
-    // --- 4. THAO TÁC PHA CHẾ TRONG BẾP ---
-    function addWaterToPot() {
-      if (potHasWater) {
-        alert("Trong vạc đã có nước rồi!");
-        return;
-      }
-      if (inv.water <= 0) {
-        alert("Hết nước trong túi rồi! Hãy sang tab 'Bản Đồ' để múc nước từ Suối Thần.");
-        return;
-      }
-      inv.water--;
-      potHasWater = true;
-      document.getElementById("pot-water-status").innerHTML = "<span style='color: #4ade80;'>Đã đổ nước tinh khiết ✔️</span>";
-      updateUI();
-    }
-
-    function pumpHeat() {
-      potHeat = Math.min(100, potHeat + 14);
-    }
-
-    function stirPot() {
-      if (!potHasWater) {
-        alert("Vạc đang khô ráo, chưa đổ nước sao khuấy được bạn ơi!");
-        return;
-      }
-      potStir = Math.min(100, potStir + 12);
-    }
-
-    function selectDecor(color) {
-      selectedDecor = color;
-      document.getElementById("btn-decor-red").classList.toggle("active", color === 'Đỏ');
-      document.getElementById("btn-decor-blue").classList.toggle("active", color === 'Xanh');
-    }
-
-    // Giảm nhiệt tự nhiên theo thời gian
-    setInterval(() => {
-      potHeat = Math.max(0, potHeat - 2);
-      document.getElementById("pot-heat-bar").style.width = potHeat + "%";
-      document.getElementById("pot-stir-bar").style.width = potStir + "%";
-    }, 200);
-
-    // --- 5. QUẢN LÝ TIỆM & ĐÓN KHÁCH ---
+    // --- 3. ĐÓNG / MỞ TIỆM & KHÁCH HÀNG ---
     function toggleShop() {
       isShopOpen = !isShopOpen;
-      const badge = document.getElementById("shop-badge");
       const btn = document.getElementById("btn-toggle-shop");
 
       if (isShopOpen) {
-        badge.className = "status-badge status-open";
-        badge.innerText = "Đang Mở Cửa Bán Hàng 🔔";
-        btn.className = "btn-action btn-orange";
-        btn.innerText = "🛑 ĐÓNG CỬA NGHỈ NGƠI";
-        nextCustomer();
+        btn.innerText = "🛑 ĐÓNG CỬA";
+        btn.style.background = "#ea580c";
+        spawnCustomer();
       } else {
-        badge.className = "status-badge status-closed";
-        badge.innerText = "Đang Đóng Cửa (Chuẩn bị)";
-        btn.className = "btn-action btn-green";
-        btn.innerText = "🔔 MỞ CỬA TIỆM ĐÓN KHÁCH";
-        clearInterval(customerTimer);
-        document.getElementById("customer-info").innerText = "Tiệm đã đóng cửa. Hãy chuẩn bị thêm nguyên liệu!";
-        document.getElementById("patience-wrap").style.display = "none";
+        btn.innerText = "🔔 MỞ TIỆM BÁN";
+        btn.style.background = "#22c55e";
+        clearInterval(patienceTimer);
         currentCustomer = null;
+        document.getElementById("cust-avatar").innerText = "😴";
+        document.getElementById("cust-dialog").innerText = "Tiệm đã đóng cửa nghỉ ngơi. Chuẩn bị đồ xong hãy mở lại!";
+        document.getElementById("cust-recipe").innerText = "";
+        document.getElementById("patience-fill").style.width = "100%";
       }
     }
 
-    function nextCustomer() {
+    function spawnCustomer() {
       if (!isShopOpen) return;
-      const decors = ['Đỏ', 'Xanh'];
-      const wantedDecor = decors[Math.floor(Math.random() * decors.length)];
-      currentCustomer = { wantedDecor: wantedDecor, basePrice: 35 };
 
-      document.getElementById("customer-info").innerHTML = 
-        `👤 <b>Khách Hàng Mới:</b><br>"Tôi cần một <b>Bình Hồi Phục</b> gấp, nhớ trang trí cho tôi cái <b>Nơ ${wantedDecor}</b> nhé!"`;
-      document.getElementById("patience-wrap").style.display = "block";
+      const avatars = ["🧝‍♂️", "🧙‍♂️", "👩‍🌾", "🧝‍♀️", "🥷"];
+      const keys = Object.keys(RECIPES);
+      const recipeKey = keys[Math.floor(Math.random() * keys.length)];
+      const recipe = RECIPES[recipeKey];
 
-      patience = 100;
-      clearInterval(customerTimer);
-      customerTimer = setInterval(() => {
-        patience -= 1;
-        document.getElementById("patience-fill").style.width = patience + "%";
+      currentCustomer = {
+        recipeKey: recipeKey,
+        recipe: recipe,
+        avatar: avatars[Math.floor(Math.random() * avatars.length)]
+      };
 
-        if (patience <= 0) {
-          clearInterval(customerTimer);
-          alert("Khách sốt ruột quá nên đã bực mình bỏ đi rồi!");
-          if (isShopOpen) setTimeout(nextCustomer, 1000);
+      document.getElementById("cust-avatar").innerText = currentCustomer.avatar;
+      document.getElementById("cust-dialog").innerHTML = `Cho tôi 1 <b>${recipe.name}</b> nhé!`;
+      document.getElementById("cust-recipe").innerHTML = 
+        `👉 <i>Công thức: Cần <b>${recipe.water}💧 Nước + ${recipe.mushroom}🍄 Nấm + ${recipe.herb}🌿 Cỏ</b></i>`;
+
+      customerPatience = 100;
+      clearInterval(patienceTimer);
+      patienceTimer = setInterval(() => {
+        customerPatience -= 1;
+        document.getElementById("patience-fill").style.width = customerPatience + "%";
+
+        if (customerPatience <= 0) {
+          clearInterval(patienceTimer);
+          alert("Khách đợi quá lâu nên bực bội bỏ đi rồi!");
+          if (isShopOpen) setTimeout(spawnCustomer, 800);
         }
       }, 350);
     }
 
-    // --- 6. GIAO BÌNH & TÍNH ĐIỂM (RATING) ---
-    function deliverPotion() {
+    // --- 4. THAO TÁC NẤU THUỐC VÀ CÁI VẠC ---
+    function dropIngredient(type) {
+      if (inv[type] <= 0) {
+        alert("Trong kho đã hết món này! Hãy sang tab 'Hái Đồ' để lấy thêm.");
+        return;
+      }
+
+      // Giới hạn bỏ tối đa 3 mỗi loại để đỡ lãng phí
+      if (pot[type] >= 3) {
+        alert("Vạc đã đầy món này rồi, không nên bỏ thêm!");
+        return;
+      }
+
+      inv[type]--;
+      pot[type]++;
+      updatePotDisplay();
+      updateInventoryUI();
+    }
+
+    function stirPotion() {
+      // Điều kiện: phải có nước mới khuấy được
+      if (pot.water <= 0) {
+        alert("Chưa thả 💧 Nước suối vào làm dung môi thì sao khuấy được bạn ơi!");
+        return;
+      }
+      if (pot.mushroom === 0 && pot.herb === 0) {
+        alert("Vạc mới chỉ có nước lã, hãy thả thêm Nấm hoặc Thảo mộc vào rồi khuấy!");
+        return;
+      }
+
+      // Hiệu ứng muỗng lắc lư
+      const spoon = document.getElementById("spoon-icon");
+      spoon.classList.add("stirring");
+      setTimeout(() => spoon.classList.remove("stirring"), 350);
+
+      // Tăng thanh khuấy
+      pot.stir = Math.min(100, pot.stir + 18);
+      document.getElementById("stir-fill").style.width = pot.stir + "%";
+      document.getElementById("stir-val").innerText = pot.stir + "%";
+
+      updatePotDisplay();
+    }
+
+    function updatePotDisplay() {
+      const status = document.getElementById("pot-status");
+      status.innerHTML = `Trong vạc: 💧 ${pot.water} | 🍄 ${pot.mushroom} | 🌿 ${pot.herb}`;
+
+      if (pot.stir >= 100) {
+        status.innerHTML += `<br><span style="color: #4ade80;">✨ Đã khuấy chín nhuyễn! Có thể giao!</span>`;
+      }
+    }
+
+    function clearPot() {
+      if (pot.water === 0 && pot.mushroom === 0 && pot.herb === 0) return;
+      if (confirm("Bạn có chắc muốn đổ hết đồ trong vạc để nấu lại từ đầu không?")) {
+        pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
+        document.getElementById("stir-fill").style.width = "0%";
+        document.getElementById("stir-val").innerText = "0%";
+        document.getElementById("pot-status").innerText = "Vạc đang trống. Hãy bỏ nguyên liệu vào!";
+      }
+    }
+
+    // --- 5. GIAO BÌNH CHO KHÁCH ---
+    function deliverOrder() {
       if (!isShopOpen || !currentCustomer) {
-        alert("Hiện tại chưa mở tiệm hoặc chưa có khách nào gọi món!");
-        return;
-      }
-      if (!potHasWater) {
-        alert("Chưa đổ nước vào vạc sao thành thuốc được!");
-        return;
-      }
-      if (inv.mushroom < 1 || inv.herb < 1) {
-        alert("Thiếu nguyên liệu pha chế! Cần có ít nhất 1 🍄 Nấm và 1 🌿 Cỏ trong túi.");
-        return;
-      }
-      if (potStir < 70) {
-        alert("Thuốc chưa khuấy đủ độ tan (cần đạt ít nhất 70%)!");
+        alert("Hiện tại quán chưa có khách nào đang chờ!");
         return;
       }
 
-      // Trừ nguyên liệu
-      inv.mushroom--;
-      inv.herb--;
+      const req = currentCustomer.recipe;
 
-      // Tính Rating
-      let stars = 5;
-      if (potHeat < 45 || potHeat > 75) stars -= 2; // Canh lửa trật
-      if (selectedDecor !== currentCustomer.wantedDecor) stars -= 1; // Sai màu nơ
+      // 1. Kiểm tra nguyên liệu trong vạc
+      if (pot.water !== req.water || pot.mushroom !== req.mushroom || pot.herb !== req.herb) {
+        alert(`❌ Sai công thức!\nKhách cần: ${req.water}💧 + ${req.mushroom}🍄 + ${req.herb}🌿\nNhưng trong vạc đang có: ${pot.water}💧 + ${pot.mushroom}🍄 + ${pot.herb}🌿\nHãy bấm 'Đổ Bỏ Vạc' để làm lại.`);
+        return;
+      }
 
-      clearInterval(customerTimer);
-      const earned = currentCustomer.basePrice + (stars * 6);
-      gold += earned;
+      // 2. Kiểm tra độ khuấy
+      if (pot.stir < 100) {
+        alert("Chưa khuấy đủ 100%! Thuốc còn lợn cợn chưa hòa tan hết.");
+        return;
+      }
 
-      alert(`🎉 GIAO HÀNG THÀNH CÔNG!\n- Đánh giá chất lượng: ${stars} ⭐\n- Nhận được: +${earned} 💰 Vàng!`);
+      // Thành công!
+      clearInterval(patienceTimer);
+      gold += req.price;
+      alert(`🎉 GIAO HÀNG THÀNH CÔNG!\nKhách cực kỳ ưng ý vì làm đúng công thức!\nNhận được: +${req.price} 💰 Vàng.`);
 
       // Reset vạc
-      potHasWater = false;
-      potHeat = 20;
-      potStir = 0;
-      selectedDecor = "";
-      document.getElementById("pot-water-status").innerHTML = "<span style='color: #f87171;'>Chưa có nước ❌</span>";
-      document.getElementById("btn-decor-red").classList.remove("active");
-      document.getElementById("btn-decor-blue").classList.remove("active");
+      pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
+      document.getElementById("stir-fill").style.width = "0%";
+      document.getElementById("stir-val").innerText = "0%";
+      document.getElementById("pot-status").innerText = "Vạc đang trống. Hãy đón khách tiếp theo!";
 
-      updateUI();
-      if (isShopOpen) setTimeout(nextCustomer, 1200);
+      updateInventoryUI();
+      if (isShopOpen) setTimeout(spawnCustomer, 900);
     }
 
-    function updateUI() {
+    // --- 6. HÁI NGUYÊN LIỆU (TAB BẢN ĐỒ) ---
+    function gather(spot) {
+      if (spot === 'shop') {
+        if (gold >= 15) {
+          gold -= 15;
+          inv.water++; inv.mushroom++; inv.herb++;
+          alert("Đã mua gói sỉ (1💧 + 1🍄 + 1🌿) với giá 15 vàng!");
+          updateInventoryUI();
+        } else {
+          alert("Không đủ 15 vàng để mua sỉ!");
+        }
+        return;
+      }
+
+      const overlay = document.getElementById("gather-overlay");
+      const bar = document.getElementById("gather-progress-bar");
+      const title = document.getElementById("gather-name");
+
+      const names = { lake: "Suối Thần 💧", forest: "Rừng Nấm 🍄", meadow: "Đồng Cỏ 🌿" };
+      title.innerText = `Đang lấy đồ tại ${names[spot]}...`;
+      overlay.style.display = "flex";
+      bar.style.width = "0%";
+
+      let p = 0;
+      const t = setInterval(() => {
+        p += 15;
+        bar.style.width = p + "%";
+        if (p >= 100) {
+          clearInterval(t);
+          overlay.style.display = "none";
+          if (spot === 'lake') inv.water += 2;
+          if (spot === 'forest') inv.mushroom += 2;
+          if (spot === 'meadow') inv.herb += 2;
+          updateInventoryUI();
+          alert(`Đã thu hoạch thành công +2 món mang về kho!`);
+        }
+      }, 70);
+    }
+
+    function updateInventoryUI() {
       document.getElementById("val-gold").innerText = gold;
-      document.getElementById("inv-water").innerText = inv.water;
-      document.getElementById("inv-mushroom").innerText = inv.mushroom;
-      document.getElementById("inv-herb").innerText = inv.herb;
-      document.getElementById("inv-crystal").innerText = inv.crystal;
+      document.getElementById("cnt-water").innerText = inv.water;
+      document.getElementById("cnt-mushroom").innerText = inv.mushroom;
+      document.getElementById("cnt-herb").innerText = inv.herb;
     }
 
-    updateUI();
+    updateInventoryUI();
   </script>
 </body>
 </html>
