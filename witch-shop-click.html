@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tiệm Giả Kim - Bản Đồ Thu Hoạch Nhanh</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #181824;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 { margin: 0 0 16px 0; color: #d8b4fe; }
+
+    .game-layout {
+      display: flex;
+      gap: 20px;
+      max-width: 950px;
+      width: 100%;
+    }
+
+    /* BẢN ĐỒ DẠNG CLICK (NODE MAP) */
+    .map-panel {
+      width: 420px;
+      background: #232336;
+      border: 2px solid #3f3f5a;
+      border-radius: 12px;
+      padding: 14px;
+      position: relative;
+    }
+    .weather-banner {
+      background: #2d2d44;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    /* Vùng vẽ bản đồ */
+    .map-nodes-container {
+      position: relative;
+      height: 340px;
+      background: #2a3d28; /* Màu nền rừng */
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #496345;
+    }
+
+    /* Điểm thu hoạch trên bản đồ */
+    .map-spot {
+      position: absolute;
+      width: 95px;
+      background: rgba(30, 30, 45, 0.9);
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      padding: 8px 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.2s;
+      user-select: none;
+    }
+    .map-spot:hover {
+      transform: scale(1.06);
+      border-color: #38bdf8;
+      background: rgba(45, 45, 65, 0.95);
+    }
+    .map-spot .icon { font-size: 1.8rem; display: block; }
+    .map-spot .spot-name { font-size: 0.8rem; font-weight: bold; margin-top: 2px; }
+    .map-spot .spot-drop { font-size: 0.7rem; color: #bbb; }
+
+    /* Vị trí từng điểm trên map */
+    #spot-forest { top: 25px; left: 30px; }
+    #spot-lake   { top: 30px; right: 35px; border-color: #0284c7; }
+    #spot-meadow { bottom: 40px; left: 45px; border-color: #16a34a; }
+    #spot-cave   { bottom: 35px; right: 40px; border-color: #eab308; }
+
+    /* Thanh tiến trình thám hiểm */
+    .gather-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.65);
+      border-radius: 10px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .gather-progress {
+      width: 70%;
+      height: 12px;
+      background: #444;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .gather-fill {
+      height: 100%;
+      width: 0%;
+      background: #38bdf8;
+      transition: width 0.1s linear;
+    }
+
+    /* CỘT TIỆM & NẤU THUỐC */
+    .shop-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card {
+      background: #232336;
+      border: 1px solid #3a3a52;
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .card h3 { margin: 0 0 10px 0; font-size: 1.05rem; color: #ffd166; }
+
+    /* Mini-game chế thuốc */
+    .gauge-bg {
+      background: #444;
+      height: 14px;
+      border-radius: 7px;
+      position: relative;
+      margin: 6px 0 10px 0;
+      overflow: hidden;
+    }
+    .safe-zone {
+      position: absolute;
+      left: 45%;
+      width: 30%;
+      height: 100%;
+      background: rgba(34, 197, 94, 0.45);
+      border-left: 2px solid #22c55e;
+      border-right: 2px solid #22c55e;
+    }
+    .bar-fill { height: 100%; width: 0%; transition: width 0.1s; }
+    .heat-bar { background: #f97316; }
+    .stir-bar { background: #06b6d4; }
+
+    button {
+      background: #7c3aed;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin: 2px;
+    }
+    button:hover { filter: brightness(1.2); }
+    .btn-buy { background: #d97706; }
+  </style>
+</head>
+<body>
+
+  <h2>🧹 Tiệm Giả Kim: Bản Đồ Thu Hoạch & Chế Thuốc</h2>
+
+  <div class="game-layout">
+    <!-- CỘT 1: BẢN ĐỒ THU HOẠCH DẠNG CLICK -->
+    <div class="map-panel">
+      <div class="weather-banner">
+        <span id="weather-text">Thời tiết: Nắng ráo ☀️</span>
+        <span style="color: #ffd166;">Vàng: <span id="gold">50</span>💰</span>
+      </div>
+
+      <div class="map-nodes-container">
+        <!-- Đang hái đồ (Overlay) -->
+        <div id="gather-overlay" class="gather-overlay">
+          <div id="gather-text">Đang thám hiểm...</div>
+          <div class="gather-progress">
+            <div id="gather-fill" class="gather-fill"></div>
+          </div>
+        </div>
+
+        <!-- Các điểm trên bản đồ để click -->
+        <div class="map-spot" id="spot-forest" onclick="startGather('forest')">
+          <span class="icon">🌲</span>
+          <div class="spot-name">Rừng Nấm</div>
+          <div class="spot-drop">🍄 Nấm đỏ</div>
+        </div>
+
+        <div class="map-spot" id="spot-lake" onclick="startGather('lake')">
+          <span class="icon">💧</span>
+          <div class="spot-name">Suối Thần</div>
+          <div class="spot-drop">🧪 Nước suối</div>
+        </div>
+
+        <div class="map-spot" id="spot-meadow" onclick="startGather('meadow')">
+          <span class="icon">🌾</span>
+          <div class="spot-name">Đồng Cỏ</div>
+          <div class="spot-drop">🌿 Thảo mộc</div>
+        </div>
+
+        <div class="map-spot" id="spot-cave" onclick="startGather('cave')">
+          <span class="icon">⛏️</span>
+          <div class="spot-name">Hang Pha Lê</div>
+          <div class="spot-drop">💎 Đá phép</div>
+        </div>
+      </div>
+
+      <div style="font-size: 0.8rem; color: #a1a1aa; margin-top: 8px;">
+        💡 <i>Bấm thẳng vào khu vực trên bản đồ để phù thủy tự đến thu hoạch (mất 2s).</i>
+      </div>
+    </div>
+
+    <!-- CỘT 2: KHÁCH HÀNG & PHÒNG THÍ NGHIỆM -->
+    <div class="shop-panel">
+      
+      <!-- Khách -->
+      <div class="card">
+        <h3>👤 Khách Mua Hàng</h3>
+        <div id="customer-desc">Đang đợi khách ghé...</div>
+        <div style="margin-top: 4px;">Kiên nhẫn: <b id="patience-val">100</b>%</div>
+      </div>
+
+      <!-- Bàn luyện thuốc -->
+      <div class="card">
+        <h3>⚗️ Vạc Nấu Thuốc</h3>
+        
+        <div>1. Nước cất: <b id="water-status">Chưa đổ ❌</b></div>
+
+        <div style="margin-top: 8px;">
+          2. Canh nhiệt lửa (giữ ở khoảng màu xanh):
+          <div class="gauge-bg">
+            <div class="safe-zone"></div>
+            <div id="heat-bar" class="bar-fill heat-bar"></div>
+          </div>
+          <button onclick="pumpHeat()">Thổi Lửa 🔥</button>
+        </div>
+
+        <div style="margin-top: 8px;">
+          3. Khuấy vạc:
+          <div class="gauge-bg">
+            <div id="stir-bar" class="bar-fill stir-bar"></div>
+          </div>
+          <button onclick="stirPot()">Khuấy Đều 🥄</button>
+        </div>
+
+        <div style="margin-top: 8px;">
+          4. Trang trí nơ:
+          <button onclick="setDecor('Đỏ')">Nơ Đỏ 🎀</button>
+          <button onclick="setDecor('Xanh')">Nơ Xanh 🎗️</button>
+          <span>Đã chọn: <b id="selected-decor">Chưa</b></span>
+        </div>
+
+        <button onclick="serveCustomer()" style="width: 100%; margin-top: 12px; background: #16a34a; font-size: 0.95rem;">
+          Đóng Chai & Giao Khách (Tính Điểm ⭐)
+        </button>
+      </div>
+
+      <!-- Kho nguyên liệu & Lái buôn -->
+      <div class="card">
+        <h3>🎒 Kho Nguyên Liệu</h3>
+        <div>🍄 Nấm: <b id="inv-mushroom">1</b> | 🌿 Thảo mộc: <b id="inv-herb">1</b> | 💧 Nước: <b id="inv-water">1</b> | 💎 Pha lê: <b id="inv-crystal">0</b></div>
+        <div style="margin-top: 8px; font-size: 0.85rem;">
+          Mua hàng gấp từ lái buôn (12💰/món):
+          <button onclick="buyItem('mushroom')" class="btn-buy">+ Nấm</button>
+          <button onclick="buyItem('herb')" class="btn-buy">+ Thảo mộc</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- 1. DỮ LIỆU & THỜI TIẾT ---
+    let gold = 50;
+    const inv = { mushroom: 1, herb: 1, water: 1, crystal: 0 };
+    let weather = "sunny"; // 'sunny' hoặc 'rainy'
+    let isGathering = false;
+
+    // Đổi thời tiết mỗi 25s
+    setInterval(() => {
+      weather = weather === "sunny" ? "rainy" : "sunny";
+      const wEl = document.getElementById("weather-text");
+      if (weather === "sunny") {
+        wEl.innerText = "Thời tiết: Nắng ráo ☀️";
+        document.getElementById("spot-forest").querySelector(".spot-drop").innerText = "🍄 Nấm khô (nhiều)";
+      } else {
+        wEl.innerText = "Thời tiết: Mưa rào 🌧️";
+        document.getElementById("spot-forest").querySelector(".spot-drop").innerText = "🍄 Nấm ít, 🌿 Cỏ ướt";
+      }
+    }, 25000);
+
+    // --- 2. THU HOẠCH DẠNG CLICK TRÊN BẢN ĐỒ ---
+    function startGather(spotKey) {
+      if (isGathering) return;
+      isGathering = true;
+
+      const overlay = document.getElementById("gather-overlay");
+      const fill = document.getElementById("gather-fill");
+      const text = document.getElementById("gather-text");
+
+      const spotNames = {
+        forest: "Rừng Nấm",
+        lake: "Suối Thần",
+        meadow: "Đồng Cỏ",
+        cave: "Hang Pha Lê"
+      };
+
+      text.innerText = `Đang hái đồ tại ${spotNames[spotKey]}...`;
+      overlay.style.display = "flex";
+      fill.style.width = "0%";
+
+      // Hiệu ứng thanh chạy 2 giây
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 5;
+        fill.style.width = progress + "%";
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          finishGather(spotKey);
+          overlay.style.display = "none";
+          isGathering = false;
+        }
+      }, 100);
+    }
+
+    function finishGather(spotKey) {
+      if (spotKey === 'forest') {
+        const amount = weather === 'sunny' ? 2 : 1;
+        inv.mushroom += amount;
+        alert(`Bạn thu được +${amount} 🍄 Nấm đỏ!`);
+      } else if (spotKey === 'lake') {
+        inv.water += 2;
+        alert("Múc được +2 💧 Nước suối tinh khiết!");
+      } else if (spotKey === 'meadow') {
+        const amount = weather === 'rainy' ? 3 : 1;
+        inv.herb += amount;
+        alert(`Thu hoạch được +${amount} 🌿 Thảo mộc!`);
+      } else if (spotKey === 'cave') {
+        inv.crystal += 1;
+        alert("Khai thác được +1 💎 Đá phép quý!");
+      }
+      updateUI();
+    }
+
+    // --- 3. VẠC NẤU THUỐC ---
+    let heat = 25;
+    let stir = 0;
+    let selectedDecor = "";
+
+    function pumpHeat() { heat = Math.min(100, heat + 15); }
+    function stirPot() {
+      if (inv.water <= 0) {
+        alert("Cần có ít nhất 1 💧 Nước suối trong kho để làm dung môi!");
+        return;
+      }
+      document.getElementById("water-status").innerText = "Đã hòa nước 💧";
+      stir = Math.min(100, stir + 12);
+    }
+    function setDecor(color) {
+      selectedDecor = color;
+      document.getElementById("selected-decor").innerText = color;
+    }
+
+    // Nhiệt độ tự giảm dần
+    setInterval(() => {
+      heat = Math.max(0, heat - 2);
+      document.getElementById("heat-bar").style.width = heat + "%";
+      document.getElementById("stir-bar").style.width = stir + "%";
+    }, 200);
+
+    // --- 4. KHÁCH HÀNG & CHẤM ĐIỂM ---
+    let currentCustomer = null;
+    let patience = 100;
+    let customerTimer = null;
+
+    function nextCustomer() {
+      const decors = ['Đỏ', 'Xanh'];
+      const pickDecor = decors[Math.floor(Math.random() * decors.length)];
+      currentCustomer = { wantedDecor: pickDecor, basePay: 35 };
+
+      document.getElementById("customer-desc").innerHTML = 
+        `Khách muốn mua <b>Bình Hồi Phục</b> (yêu cầu nơ <b>${pickDecor}</b>).`;
+
+      patience = 100;
+      clearInterval(customerTimer);
+      customerTimer = setInterval(() => {
+        patience -= 1;
+        document.getElementById("patience-val").innerText = patience;
+
+        if (patience <= 0) {
+          clearInterval(customerTimer);
+          alert("Khách hết kiên nhẫn và bỏ đi rồi!");
+          resetPot();
+          nextCustomer();
+        }
+      }, 350);
+    }
+
+    function serveCustomer() {
+      if (inv.mushroom < 1 || inv.herb < 1 || inv.water < 1) {
+        alert("Thiếu nguyên liệu! Cần 1 🍄, 1 🌿 và 1 💧 để chế.");
+        return;
+      }
+      if (stir < 75) {
+        alert("Chưa khuấy đủ độ sánh (ít nhất 75%)!");
+        return;
+      }
+
+      // Trừ kho
+      inv.mushroom--;
+      inv.herb--;
+      inv.water--;
+
+      // Tính Rating sao
+      let stars = 5;
+      if (heat < 45 || heat > 75) stars -= 2; // Canh lửa trật
+      if (selectedDecor !== currentCustomer.wantedDecor) stars -= 1; // Sai nơ
+
+      clearInterval(customerTimer);
+      const earned = currentCustomer.basePay + (stars * 5);
+      gold += earned;
+
+      alert(`🎉 Đã giao thuốc!\nĐánh giá: ${stars} ⭐\nTiền nhận được: ${earned} 💰`);
+
+      resetPot();
+      updateUI();
+      setTimeout(nextCustomer, 1000);
+    }
+
+    function resetPot() {
+      heat = 20;
+      stir = 0;
+      selectedDecor = "";
+      document.getElementById("water-status").innerText = "Chưa đổ ❌";
+      document.getElementById("selected-decor").innerText = "Chưa";
+    }
+
+    function buyItem(type) {
+      if (gold >= 12) {
+        gold -= 12;
+        inv[type]++;
+        updateUI();
+      } else {
+        alert("Không đủ tiền mua sỉ!");
+      }
+    }
+
+    function updateUI() {
+      document.getElementById("gold").innerText = gold;
+      document.getElementById("inv-mushroom").innerText = inv.mushroom;
+      document.getElementById("inv-herb").innerText = inv.herb;
+      document.getElementById("inv-water").innerText = inv.water;
+      document.getElementById("inv-crystal").innerText = inv.crystal;
+    }
+
+    // Khởi chạy game
+    nextCustomer();
+    updateUI();
+  </script>
+</body>
+</html>
