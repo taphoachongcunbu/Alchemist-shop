@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
-  <title>Tiệm Giả Kim - Hiệu Ứng Chiều Sâu Lòng Vạc</title>
+  <title>Tiệm Giả Kim - Bong Bóng Khuấy Sủi Bọt</title>
   <style>
     * {
       box-sizing: border-box;
@@ -116,7 +116,7 @@
       justify-content: space-between;
     }
 
-    /* SÂN KHẤU VẠC NỒI (HIỆU ỨNG CHIỀU SÂU LÒNG NỒI) */
+    /* SÂN KHẤU VẠC VÀ MẶT BÀN */
     .cauldron-stage {
       height: 175px;
       background: radial-gradient(circle, #2b1f47 0%, #151224 85%);
@@ -141,14 +141,14 @@
       justify-content: center;
     }
 
-    /* KHUNG VẠC KẸP 3 LỚP */
+    /* KHUNG VẠC KẸP 3 LỚP + BONG BÓNG */
     .cauldron-sandwich {
       position: relative;
       width: 125px;
       height: 105px;
     }
 
-    /* LỚP 1: Thành sau vạc (nằm sâu dưới muỗng) */
+    /* Lớp 1: Thành sau vạc */
     .cauldron-back {
       position: absolute;
       width: 100%;
@@ -160,7 +160,50 @@
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
     }
 
-    /* LỚP 2: Cây muỗng (nằm ở giữa) */
+    /* BONG BÓNG MA THUẬT SỦI BỌT */
+    .bubbles-container {
+      position: absolute;
+      bottom: 35px; /* Ngay vị trí miệng trong của vạc */
+      left: 20px;
+      width: 85px;
+      height: 40px;
+      pointer-events: none;
+      z-index: 2; /* Nằm trong vạc, dưới thành trước */
+      display: none; /* Ẩn mặc định, khi khuấy mới bật */
+    }
+    .bubbles-container.active {
+      display: block;
+    }
+    .bubble {
+      position: absolute;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 30%, #38bdf8, #a855f7);
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.8);
+      animation: boilUp 0.75s infinite ease-in;
+    }
+    .b1 { left: 12px; width: 10px; height: 10px; animation-delay: 0.05s; }
+    .b2 { left: 32px; width: 14px; height: 14px; animation-delay: 0.25s; }
+    .b3 { left: 52px; width: 9px;  height: 9px;  animation-delay: 0.45s; }
+    .b4 { left: 68px; width: 12px; height: 12px; animation-delay: 0.15s; }
+    .b5 { left: 22px; width: 8px;  height: 8px;  animation-delay: 0.35s; }
+
+    @keyframes boilUp {
+      0% {
+        transform: translateY(8px) scale(0.3);
+        opacity: 0;
+      }
+      40% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-24px) scale(1.25);
+        opacity: 0; /* Nổ bọt vỡ vụn */
+      }
+    }
+
+    /* Lớp 2: Cây muỗng */
     .spoon-img {
       position: absolute;
       width: 40px;
@@ -169,25 +212,19 @@
       filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
       transition: all 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
     }
-
-    /* Muỗng ở ngoài bàn: bay lên cao vượt trên tất cả */
     .spoon-img.on-table {
       z-index: 10;
       right: -55px;
       bottom: 10px;
       transform: rotate(45deg);
     }
-
-    /* Muỗng đã vào vạc: chìm xuống lớp 2 và cắm sâu xuống đáy */
     .spoon-img.in-pot {
-      z-index: 2;
+      z-index: 3;
       right: 42px;
       bottom: 22px;
       transform: rotate(10deg);
       transform-origin: 50% 85%;
     }
-
-    /* Animation khuấy: muỗng đảo tròn bên trong */
     .spoon-img.stirring {
       animation: stirAction 0.5s infinite ease-in-out;
     }
@@ -203,17 +240,16 @@
       }
     }
 
-    /* LỚP 3: Thành trước của vạc (đè lên phần đầu muỗng) */
+    /* Lớp 3: Thành trước vạc (che đầu muỗng) */
     .cauldron-front {
       position: absolute;
       width: 100%;
       height: 100%;
       bottom: 0;
       left: 0;
-      z-index: 3;
+      z-index: 4;
       object-fit: contain;
       pointer-events: none;
-      /* Cắt lấy phần thành trước từ 36% trở xuống đáy */
       clip-path: polygon(0% 36%, 100% 36%, 100% 100%, 0% 100%);
     }
 
@@ -290,7 +326,7 @@
       border-radius: 10px;
     }
 
-    /* THANH TIẾN ĐỘ & NÚT BẤM */
+    /* TIẾN ĐỘ & NÚT */
     .gauge-bg {
       height: 14px;
       background: #141221;
@@ -470,17 +506,26 @@
           <span style="font-size: 0.72rem; color: #a59fc4;">Chạm hộp thả đồ • Chạm muỗng để cầm</span>
         </div>
 
-        <!-- KHUNG VẠC KẸP 3 LỚP (BÁNH KẸP) -->
+        <!-- KHUNG VẠC KẸP 3 LỚP + BONG BÓNG NỔ BỌT -->
         <div class="cauldron-stage">
           <div class="table-surface">
             <div class="cauldron-sandwich">
               <!-- Lớp 1: Thành sau vạc -->
               <img class="cauldron-back" src="https://i.postimg.cc/rmPNwzCX/1000017272-removebg-preview.png" alt="Vạc sau">
 
-              <!-- Lớp 2: Cây muỗng (cắm vào lòng) -->
+              <!-- BONG BÓNG SỦI BỌT MA THUẬT (Nằm trong lòng vạc) -->
+              <div id="pot-bubbles" class="bubbles-container">
+                <div class="bubble b1"></div>
+                <div class="bubble b2"></div>
+                <div class="bubble b3"></div>
+                <div class="bubble b4"></div>
+                <div class="bubble b5"></div>
+              </div>
+
+              <!-- Lớp 2: Cây muỗng -->
               <img id="spoon-img" class="spoon-img on-table" src="https://i.postimg.cc/52VTVktJ/1000017273-removebg-preview.png" alt="Muỗng" onclick="toggleSpoonPosition()">
 
-              <!-- Lớp 3: Thành trước vạc (che đầu muỗng) -->
+              <!-- Lớp 3: Thành trước vạc -->
               <img class="cauldron-front" src="https://i.postimg.cc/rmPNwzCX/1000017272-removebg-preview.png" alt="Vạc trước">
             </div>
 
@@ -637,9 +682,11 @@
       const spoon = document.getElementById("spoon-img");
       const btnStir = document.getElementById("btn-stir");
       const hint = document.getElementById("spoon-hint");
+      const bubbles = document.getElementById("pot-bubbles");
 
       spoon.classList.remove("in-pot", "stirring");
       spoon.classList.add("on-table");
+      bubbles.classList.remove("active");
       isSpoonInPot = false;
       hint.style.display = "block";
 
@@ -648,7 +695,7 @@
       updatePotDisplay();
     }
 
-    // --- 4. THAO TÁC KHUẤY ---
+    // --- 4. THAO TÁC KHUẤY & SỦI BỌT BONG BÓNG ---
     function stirPotion() {
       if (!isSpoonInPot) {
         alert("Cây muỗng đang ở ngoài bàn, hãy chạm vào muỗng để đưa vào vạc!");
@@ -663,16 +710,23 @@
         return;
       }
 
+      // Kích hoạt muỗng lắc lư
       const spoon = document.getElementById("spoon-img");
       spoon.classList.remove("stirring");
       void spoon.offsetWidth;
       spoon.classList.add("stirring");
 
+      // Bật bong bóng sủi bọt ma thuật
+      const bubbles = document.getElementById("pot-bubbles");
+      bubbles.classList.add("active");
+
       clearTimeout(stirTimeout);
       stirTimeout = setTimeout(() => {
         spoon.classList.remove("stirring");
-      }, 550);
+        bubbles.classList.remove("active"); // Dừng khuấy thì hết sôi bọt
+      }, 600);
 
+      // Tăng thanh độ sánh
       pot.stir = Math.min(100, pot.stir + 20);
       document.getElementById("stir-fill").style.width = pot.stir + "%";
       document.getElementById("stir-val").innerText = pot.stir + "%";
