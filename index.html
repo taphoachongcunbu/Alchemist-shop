@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
-  <title>Tiệm Giả Kim Phù Thủy</title>
+  <title>Tiệm Giả Kim - Test Animation Muỗng</title>
   <style>
     * {
       box-sizing: border-box;
@@ -116,71 +116,114 @@
       justify-content: space-between;
     }
 
-    /* KHU VỰC VẠC NỒI & CÂY MUỖNG */
+    /* KHU VỰC VẠC VÀ BÀN ĐẶT MUỖNG */
     .cauldron-stage {
-      height: 160px;
-      background: radial-gradient(circle, #2b1f47 0%, #151224 80%);
+      height: 175px;
+      background: radial-gradient(circle, #2b1f47 0%, #151224 85%);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       position: relative;
       overflow: hidden;
       border: 1px solid #4e4376;
       margin-bottom: 10px;
+      padding-bottom: 12px;
     }
-    .cauldron-container {
+
+    /* Khung sàn chứa cả vạc và mặt bàn */
+    .table-surface {
       position: relative;
-      width: 130px;
-      height: 110px;
+      width: 250px;
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
     }
+
+    /* Vạc Nồi */
     .cauldron-img {
-      width: 100%;
-      height: 100%;
+      width: 125px;
+      height: 105px;
       object-fit: contain;
-      position: absolute;
-      bottom: 0;
-      left: 0;
       z-index: 2;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
     }
-    /* Cây muỗng cắm vào lòng vạc */
+
+    /* CÂY MUỖNG ĐÃ THU NHỎ SIZE (42px) */
     .spoon-img {
       position: absolute;
-      width: 65px;
-      top: -25px;
-      right: 15px;
-      z-index: 3;
-      transform-origin: 50% 85%;
-      transition: transform 0.1s ease;
+      width: 42px; /* Đã giảm kích thước nhỏ gọn */
+      height: auto;
+      z-index: 5;
+      cursor: pointer;
       filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+      /* Hiệu ứng chuyển động mượt mà khi di chuyển từ bàn vào vạc */
+      transition: all 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
     }
-    /* Animation khuấy vạc chuyển động tròn bên trong */
-    .stirring {
-      animation: deepStir 0.6s infinite ease-in-out;
+
+    /* TRẠNG THÁI 1: Muỗng nằm bên cạnh trên mặt bàn */
+    .spoon-img.on-table {
+      right: 15px;
+      bottom: 8px;
+      transform: rotate(45deg);
     }
-    @keyframes deepStir {
+
+    /* Gợi ý bấm vào muỗng khi đang ở trên bàn */
+    .spoon-hint {
+      position: absolute;
+      right: 2px;
+      bottom: 60px;
+      background: rgba(168, 85, 247, 0.9);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 6px;
+      animation: pulseHint 1s infinite alternate;
+      pointer-events: none;
+      z-index: 6;
+    }
+    @keyframes pulseHint {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* TRẠNG THÁI 2: Muỗng cắm vào bên trong lòng vạc */
+    .spoon-img.in-pot {
+      right: 95px;
+      bottom: 35px;
+      transform: rotate(10deg);
+      transform-origin: 50% 85%;
+    }
+
+    /* TRẠNG THÁI 3: Animation muỗng khuấy đảo tròn bên trong lòng vạc */
+    .spoon-img.stirring {
+      animation: stirAction 0.5s infinite ease-in-out;
+    }
+    @keyframes stirAction {
       0% {
-        transform: rotate(-15deg) translateY(0px) translateX(-5px);
+        transform: rotate(-18deg) translateY(0px) translateX(-4px);
       }
       50% {
-        transform: rotate(20deg) translateY(6px) translateX(6px);
+        transform: rotate(20deg) translateY(5px) translateX(6px);
       }
       100% {
-        transform: rotate(-15deg) translateY(0px) translateX(-5px);
+        transform: rotate(-18deg) translateY(0px) translateX(-4px);
       }
     }
+
     .pot-status-text {
       font-size: 0.8rem;
       font-weight: bold;
       color: #93c5fd;
-      margin-top: 6px;
-      z-index: 4;
+      margin-top: 4px;
       text-align: center;
+      z-index: 4;
     }
 
-    /* KỆ HỘP NGUYÊN LIỆU CLICKABLE */
+    /* KỆ NGUYÊN LIỆU */
     .ingredients-shelf {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -197,23 +240,21 @@
       align-items: center;
       position: relative;
       cursor: pointer;
-      transition: transform 0.1s, border-color 0.15s;
+      transition: transform 0.1s;
     }
     .shelf-item:active {
       transform: scale(0.92);
-      border-color: #ffd166;
       background: #3d3263;
     }
     .shelf-item img {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4));
     }
     .shelf-item .name {
       font-size: 0.75rem;
       font-weight: bold;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .shelf-item .badge {
       position: absolute;
@@ -225,7 +266,6 @@
       font-weight: 800;
       padding: 2px 6px;
       border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     /* KHUẤY & GIAO HÀNG */
@@ -243,6 +283,8 @@
       background: linear-gradient(90deg, #38bdf8, #a855f7);
       transition: width 0.1s;
     }
+
+    /* Nút khuấy: Mặc định bị khóa khi muỗng chưa vào vạc */
     .btn-stir {
       width: 100%;
       background: #0284c7;
@@ -254,8 +296,16 @@
       font-size: 0.9rem;
       cursor: pointer;
       margin-bottom: 8px;
+      transition: background 0.2s, opacity 0.2s;
     }
-    .btn-stir:active { filter: brightness(1.2); }
+    .btn-stir:disabled {
+      background: #3d3754;
+      color: #7d7596;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .btn-stir:not(:disabled):active { filter: brightness(1.2); }
+
     .btn-deliver {
       width: 100%;
       background: #16a34a;
@@ -285,7 +335,7 @@
       cursor: pointer;
     }
 
-    /* BẢN ĐỒ THU HOẠCH */
+    /* TAB BẢN ĐỒ */
     .map-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -332,7 +382,7 @@
     .nav-tab.active { color: #d8b4fe; }
     .nav-tab .icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 
-    /* MODAL ĐẾM GIÂY */
+    /* OVERLAY THÁM HIỂM */
     #gather-overlay {
       display: none;
       position: absolute;
@@ -401,37 +451,36 @@
       <div class="brewing-bench">
         <div class="bench-title">
           <span>⚗️ VẠC PHA CHẾ TRỰC TIẾP</span>
-          <span style="font-size: 0.72rem; color: #a59fc4;">Chạm vào hộp để thả đồ</span>
+          <span style="font-size: 0.72rem; color: #a59fc4;">Chạm hộp thả đồ • Chạm muỗng để cầm</span>
         </div>
 
-        <!-- Khung Vạc Nồi & Muỗng (Ảnh thật của bạn) -->
+        <!-- Khung Vạc Nồi & Mặt Bàn Đặt Muỗng -->
         <div class="cauldron-stage">
-          <div class="cauldron-container">
-            <!-- Cây muỗng cắm vào lòng vạc -->
-            <img id="spoon-img" class="spoon-img" src="https://i.postimg.cc/52VTVktJ/1000017273-removebg-preview.png" alt="Muỗng">
-            <!-- Vạc nồi thuốc -->
+          <div class="table-surface">
+            <!-- Vạc nồi -->
             <img class="cauldron-img" src="https://i.postimg.cc/rmPNwzCX/1000017272-removebg-preview.png" alt="Vạc">
+
+            <!-- CÂY MUỖNG: Mặc định nằm ở trạng thái on-table (kèm hướng dẫn bấm) -->
+            <img id="spoon-img" class="spoon-img on-table" src="https://i.postimg.cc/52VTVktJ/1000017273-removebg-preview.png" alt="Muỗng" onclick="toggleSpoonPosition()">
+            <span id="spoon-hint" class="spoon-hint">👆 Chạm muỗng!</span>
           </div>
-          <div id="pot-status" class="pot-status-text">Vạc đang trống. Chạm hộp bên dưới để thả đồ!</div>
+          <div id="pot-status" class="pot-status-text">Muỗng đang trên bàn. Thả đồ rồi chạm vào muỗng!</div>
         </div>
 
-        <!-- KỆ HỘP NGUYÊN LIỆU CLICKABLE (Dùng ảnh thật của bạn) -->
+        <!-- KỆ HỘP NGUYÊN LIỆU CLICKABLE -->
         <div class="ingredients-shelf">
-          <!-- Hộp Nước -->
           <div class="shelf-item" onclick="dropIngredient('water')">
             <span class="badge" id="cnt-water">2</span>
             <img src="https://i.postimg.cc/t4jwjmgH/1000017276-removebg-preview.png" alt="Bình nước">
             <span class="name">Bình Nước</span>
           </div>
 
-          <!-- Hộp Nấm -->
           <div class="shelf-item" onclick="dropIngredient('mushroom')">
             <span class="badge" id="cnt-mushroom">2</span>
             <img src="https://i.postimg.cc/fRfFTjVF/1000017275-removebg-preview.png" alt="Hộp nấm">
             <span class="name">Hộp Nấm</span>
           </div>
 
-          <!-- Hộp Cỏ -->
           <div class="shelf-item" onclick="dropIngredient('herb')">
             <span class="badge" id="cnt-herb">2</span>
             <img src="https://i.postimg.cc/nhJgJwLZ/1000017274-removebg-preview.png" alt="Hộp thảo mộc">
@@ -439,16 +488,18 @@
           </div>
         </div>
 
-        <!-- Thanh Khuấy và Nút Khuấy -->
+        <!-- Thanh Khuấy và Nút Khuấy (Chỉ kích hoạt khi muỗng đã ở trong vạc) -->
         <div style="margin-bottom: 10px;">
           <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
-            <span>Độ nhuyễn của thuốc:</span>
+            <span>Độ chín của thuốc:</span>
             <b id="stir-val" style="color: #38bdf8;">0%</b>
           </div>
           <div class="gauge-bg">
             <div id="stir-fill" class="stir-fill"></div>
           </div>
-          <button class="btn-stir" onclick="stirPotion()">🥄 BẤM ĐỂ KHUẤY VẠC</button>
+          <button id="btn-stir" class="btn-stir" onclick="stirPotion()" disabled>
+            🔒 HÃY CHẠM VÀO MUỖNG ĐỂ ĐƯA VÀO VẠC
+          </button>
         </div>
 
         <!-- Nút Giao Hàng -->
@@ -458,7 +509,7 @@
 
         <div class="mini-actions">
           <button class="btn-small" onclick="clearPot()">🧹 Đổ Bỏ Vạc Nấu Lại</button>
-          <span style="font-size: 0.72rem; color: #94a3b8;">Cần đủ đồ + khuấy 100%</span>
+          <button class="btn-small" onclick="returnSpoonToTable()">🥄 Đặt muỗng về bàn</button>
         </div>
       </div>
 
@@ -529,6 +580,7 @@
     };
 
     let pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
+    let isSpoonInPot = false; // Trạng thái muỗng: trên bàn (false) hay trong vạc (true)
     let currentCustomer = null;
     let customerPatience = 100;
     let patienceTimer = null;
@@ -542,7 +594,118 @@
       tabEl.classList.add('active');
     }
 
-    // --- 3. ĐÓNG / MỞ TIỆM ---
+    // --- 3. LOGIC & ANIMATION CỦA CÂY MUỖNG ---
+    function toggleSpoonPosition() {
+      const spoon = document.getElementById("spoon-img");
+      const btnStir = document.getElementById("btn-stir");
+      const hint = document.getElementById("spoon-hint");
+
+      if (!isSpoonInPot) {
+        // Đưa muỗng từ bàn vào vạc
+        spoon.classList.remove("on-table");
+        spoon.classList.add("in-pot");
+        isSpoonInPot = true;
+        hint.style.display = "none";
+
+        btnStir.disabled = false;
+        btnStir.innerHTML = "🥄 BẤM ĐỂ BẮT ĐẦU KHUẤY";
+        updatePotDisplay();
+      } else {
+        // Đưa muỗng lại về bàn
+        returnSpoonToTable();
+      }
+    }
+
+    function returnSpoonToTable() {
+      const spoon = document.getElementById("spoon-img");
+      const btnStir = document.getElementById("btn-stir");
+      const hint = document.getElementById("spoon-hint");
+
+      spoon.classList.remove("in-pot", "stirring");
+      spoon.classList.add("on-table");
+      isSpoonInPot = false;
+      hint.style.display = "block";
+
+      btnStir.disabled = true;
+      btnStir.innerHTML = "🔒 HÃY CHẠM VÀO MUỖNG ĐỂ ĐƯA VÀO VẠC";
+      updatePotDisplay();
+    }
+
+    // --- 4. THAO TÁC KHUẤY THUỐC ---
+    function stirPotion() {
+      if (!isSpoonInPot) {
+        alert("Cây muỗng đang ở trên bàn, hãy chạm vào muỗng để đưa vào vạc trước!");
+        return;
+      }
+      if (pot.water <= 0) {
+        alert("Chưa thả Nước vào làm dung môi thì sao khuấy được bạn ơi!");
+        return;
+      }
+      if (pot.mushroom === 0 && pot.herb === 0) {
+        alert("Vạc mới chỉ có nước lã, hãy chạm vào Hộp Nấm hoặc Hộp Cỏ để thả vào vạc rồi khuấy!");
+        return;
+      }
+
+      // Kích hoạt animation muỗng khuấy đảo tròn
+      const spoon = document.getElementById("spoon-img");
+      spoon.classList.remove("stirring");
+      void spoon.offsetWidth; // Trigger reflow để animation lặp lại mượt mà
+      spoon.classList.add("stirring");
+
+      clearTimeout(stirTimeout);
+      stirTimeout = setTimeout(() => {
+        spoon.classList.remove("stirring");
+      }, 550);
+
+      // Tăng thanh độ sánh
+      pot.stir = Math.min(100, pot.stir + 20);
+      document.getElementById("stir-fill").style.width = pot.stir + "%";
+      document.getElementById("stir-val").innerText = pot.stir + "%";
+
+      updatePotDisplay();
+    }
+
+    // --- 5. THẢ NGUYÊN LIỆU VÀO VẠC ---
+    function dropIngredient(type) {
+      if (inv[type] <= 0) {
+        alert("Trong kho đã hết món này! Hãy sang tab 'Hái Đồ' để thu hoạch thêm.");
+        return;
+      }
+      if (pot[type] >= 3) {
+        alert("Vạc đã đầy món này rồi, không nên bỏ thêm lãng phí!");
+        return;
+      }
+
+      inv[type]--;
+      pot[type]++;
+      updatePotDisplay();
+      updateInventoryUI();
+    }
+
+    function updatePotDisplay() {
+      const status = document.getElementById("pot-status");
+      status.innerHTML = `Đã bỏ: 💧 ${pot.water} | 🍄 ${pot.mushroom} | 🌿 ${pot.herb}`;
+
+      if (!isSpoonInPot) {
+        status.innerHTML += `<br><span style="color: #cbd5e1;">(Muỗng đang ở ngoài bàn)</span>`;
+      } else if (pot.stir >= 100) {
+        status.innerHTML += `<br><span style="color: #4ade80;">✨ Đã khuấy chín sánh mịn! Có thể giao!</span>`;
+      } else {
+        status.innerHTML += `<br><span style="color: #38bdf8;">(Muỗng đã trong vạc - Sẵn sàng khuấy)</span>`;
+      }
+    }
+
+    function clearPot() {
+      if (pot.water === 0 && pot.mushroom === 0 && pot.herb === 0) return;
+      if (confirm("Bạn có muốn dọn sạch vạc để nấu mẻ mới không?")) {
+        pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
+        document.getElementById("stir-fill").style.width = "0%";
+        document.getElementById("stir-val").innerText = "0%";
+        returnSpoonToTable();
+      }
+    }
+
+    // --- 6. QUẢN LÝ TIỆM & KHÁCH HÀNG ---
     function toggleShop() {
       isShopOpen = !isShopOpen;
       const btn = document.getElementById("btn-toggle-shop");
@@ -596,73 +759,7 @@
       }, 350);
     }
 
-    // --- 4. THAO TÁC THẢ NGUYÊN LIỆU TỪ HỘP ---
-    function dropIngredient(type) {
-      if (inv[type] <= 0) {
-        alert("Trong kho đã hết món này! Hãy sang tab 'Hái Đồ' để thu hoạch thêm.");
-        return;
-      }
-      if (pot[type] >= 3) {
-        alert("Vạc đã đầy món này rồi, không nên bỏ thêm lãng phí!");
-        return;
-      }
-
-      inv[type]--;
-      pot[type]++;
-      updatePotDisplay();
-      updateInventoryUI();
-    }
-
-    // --- 5. ANIMATION MUỖNG KHUẤY TRONG LÒNG NỒI ---
-    function stirPotion() {
-      if (pot.water <= 0) {
-        alert("Chưa thả Nước vào làm dung môi thì sao khuấy được bạn ơi!");
-        return;
-      }
-      if (pot.mushroom === 0 && pot.herb === 0) {
-        alert("Vạc mới chỉ có nước lã, hãy chạm vào Hộp Nấm hoặc Hộp Cỏ để thả vào vạc rồi khuấy!");
-        return;
-      }
-
-      // Kích hoạt animation cắm muỗng khuấy sâu vào nồi
-      const spoon = document.getElementById("spoon-img");
-      spoon.classList.remove("stirring");
-      void spoon.offsetWidth; // Trigger reflow
-      spoon.classList.add("stirring");
-
-      clearTimeout(stirTimeout);
-      stirTimeout = setTimeout(() => {
-        spoon.classList.remove("stirring");
-      }, 600);
-
-      // Tăng thanh độ sánh
-      pot.stir = Math.min(100, pot.stir + 20);
-      document.getElementById("stir-fill").style.width = pot.stir + "%";
-      document.getElementById("stir-val").innerText = pot.stir + "%";
-
-      updatePotDisplay();
-    }
-
-    function updatePotDisplay() {
-      const status = document.getElementById("pot-status");
-      status.innerHTML = `Đã bỏ: 💧 ${pot.water} | 🍄 ${pot.mushroom} | 🌿 ${pot.herb}`;
-
-      if (pot.stir >= 100) {
-        status.innerHTML += `<br><span style="color: #4ade80;">✨ Đã khuấy chín sánh mịn! Có thể giao!</span>`;
-      }
-    }
-
-    function clearPot() {
-      if (pot.water === 0 && pot.mushroom === 0 && pot.herb === 0) return;
-      if (confirm("Bạn có muốn dọn sạch vạc để nấu mẻ mới không?")) {
-        pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
-        document.getElementById("stir-fill").style.width = "0%";
-        document.getElementById("stir-val").innerText = "0%";
-        document.getElementById("pot-status").innerText = "Vạc đang trống. Chạm hộp bên dưới để thả đồ!";
-      }
-    }
-
-    // --- 6. GIAO BÌNH CHO KHÁCH ---
+    // --- 7. GIAO BÌNH CHO KHÁCH ---
     function deliverOrder() {
       if (!isShopOpen || !currentCustomer) {
         alert("Hiện tại chưa mở tiệm hoặc chưa có khách nào đang chờ!");
@@ -688,13 +785,13 @@
       pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
       document.getElementById("stir-fill").style.width = "0%";
       document.getElementById("stir-val").innerText = "0%";
-      document.getElementById("pot-status").innerText = "Vạc đang trống. Hãy đón khách tiếp theo!";
+      returnSpoonToTable();
 
       updateInventoryUI();
       if (isShopOpen) setTimeout(spawnCustomer, 900);
     }
 
-    // --- 7. HÁI NGUYÊN LIỆU (TAB BẢN ĐỒ) ---
+    // --- 8. THU HOẠCH (TAB BẢN ĐỒ) ---
     function gather(spot) {
       if (spot === 'shop') {
         if (gold >= 15) {
