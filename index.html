@@ -31,7 +31,6 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.9);
     }
 
-    /* Header */
     header {
       background: #25203b;
       padding: 12px 16px;
@@ -50,11 +49,10 @@
       font-size: 0.9rem;
     }
 
-    /* Tab Switcher */
     .tab-view { display: none; padding: 12px; flex: 1; }
     .tab-view.active { display: block; }
 
-    /* KHU VỰC KHÁCH HÀNG (Ở TRÊN) */
+    /* KHÁCH HÀNG */
     .customer-counter {
       background: #231e38;
       border: 1px solid #433868;
@@ -89,7 +87,6 @@
       color: #cbd5e1;
     }
 
-    /* Thanh kiên nhẫn */
     .patience-bar {
       height: 8px;
       background: #12101c;
@@ -104,7 +101,7 @@
       transition: width 0.15s linear;
     }
 
-    /* KHU VỰC BÀN NẤU & CÁI VẠC (Ở DƯỚI KHÁCH) */
+    /* BÀN CHẾ TẠO */
     .brewing-bench {
       background: #231e38;
       border: 1px solid #433868;
@@ -119,10 +116,10 @@
       justify-content: space-between;
     }
 
-    /* Hình cái vạc & Cái muỗng trực quan */
-    .cauldron-area {
-      height: 125px;
-      background: #161324;
+    /* KHU VỰC VẠC NỒI & CÂY MUỖNG */
+    .cauldron-stage {
+      height: 160px;
+      background: radial-gradient(circle, #2b1f47 0%, #151224 80%);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
@@ -130,62 +127,108 @@
       justify-content: center;
       position: relative;
       overflow: hidden;
-      border: 1px dashed #4e4376;
+      border: 1px solid #4e4376;
       margin-bottom: 10px;
     }
-    .cauldron-graphic {
-      font-size: 4rem;
+    .cauldron-container {
       position: relative;
-      display: inline-block;
+      width: 130px;
+      height: 110px;
     }
-    .spoon-graphic {
+    .cauldron-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       position: absolute;
-      font-size: 2.2rem;
-      top: -15px;
-      right: -10px;
-      transform-origin: bottom center;
-      transition: transform 0.15s;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
     }
+    /* Cây muỗng cắm vào lòng vạc */
+    .spoon-img {
+      position: absolute;
+      width: 65px;
+      top: -25px;
+      right: 15px;
+      z-index: 3;
+      transform-origin: 50% 85%;
+      transition: transform 0.1s ease;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+    }
+    /* Animation khuấy vạc chuyển động tròn bên trong */
     .stirring {
-      animation: stirAnimation 0.4s infinite alternate;
+      animation: deepStir 0.6s infinite ease-in-out;
     }
-    @keyframes stirAnimation {
-      0% { transform: rotate(-25deg) translateY(0); }
-      100% { transform: rotate(20deg) translateY(4px); }
+    @keyframes deepStir {
+      0% {
+        transform: rotate(-15deg) translateY(0px) translateX(-5px);
+      }
+      50% {
+        transform: rotate(20deg) translateY(6px) translateX(6px);
+      }
+      100% {
+        transform: rotate(-15deg) translateY(0px) translateX(-5px);
+      }
     }
     .pot-status-text {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: bold;
       color: #93c5fd;
-      margin-top: 4px;
+      margin-top: 6px;
+      z-index: 4;
       text-align: center;
     }
 
-    /* Nút thả nguyên liệu */
-    .ingredient-actions {
+    /* KỆ HỘP NGUYÊN LIỆU CLICKABLE */
+    .ingredients-shelf {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
     }
-    .btn-ingredient {
-      background: #312952;
-      border: 1px solid #57488a;
-      color: #fff;
-      padding: 8px 4px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: bold;
+    .shelf-item {
+      background: #2e264a;
+      border: 1.5px solid #57488a;
+      border-radius: 10px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
       cursor: pointer;
-      text-align: center;
+      transition: transform 0.1s, border-color 0.15s;
     }
-    .btn-ingredient:active { transform: scale(0.96); background: #4a3e79; }
-    .btn-ingredient small { display: block; font-size: 0.7rem; color: #facc15; }
+    .shelf-item:active {
+      transform: scale(0.92);
+      border-color: #ffd166;
+      background: #3d3263;
+    }
+    .shelf-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4));
+    }
+    .shelf-item .name {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+    .shelf-item .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #eab308;
+      color: #1a162b;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
 
-    /* Thanh khuấy & Nút khuấy */
-    .stir-box {
-      margin-bottom: 10px;
-    }
+    /* KHUẤY & GIAO HÀNG */
     .gauge-bg {
       height: 14px;
       background: #141221;
@@ -197,7 +240,7 @@
     .stir-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      background: linear-gradient(90deg, #38bdf8, #a855f7);
       transition: width 0.1s;
     }
     .btn-stir {
@@ -210,10 +253,9 @@
       font-weight: bold;
       font-size: 0.9rem;
       cursor: pointer;
+      margin-bottom: 8px;
     }
     .btn-stir:active { filter: brightness(1.2); }
-
-    /* Nút giao cho khách */
     .btn-deliver {
       width: 100%;
       background: #16a34a;
@@ -228,7 +270,6 @@
     }
     .btn-deliver:active { transform: scale(0.98); }
 
-    /* CÔNG THỨC & NÚT DỌN VẠC */
     .mini-actions {
       display: flex;
       justify-content: space-between;
@@ -264,7 +305,7 @@
     .map-card .name { font-weight: bold; font-size: 0.85rem; margin-top: 4px; }
     .map-card .info { font-size: 0.75rem; color: #a59fc4; }
 
-    /* Thanh Menu đáy */
+    /* MENU ĐÁY */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -291,7 +332,7 @@
     .nav-tab.active { color: #d8b4fe; }
     .nav-tab .icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 
-    /* Modal chờ thám hiểm */
+    /* MODAL ĐẾM GIÂY */
     #gather-overlay {
       display: none;
       position: absolute;
@@ -317,11 +358,11 @@
   <div class="app-screen">
     <!-- Header -->
     <header>
-      <div style="font-weight: bold; color: #d8b4fe;">🧙‍♀️ Tiệm Phù Thủy</div>
+      <div style="font-weight: bold; color: #d8b4fe;">🧙‍♀️ Tiệm Phù Thủy Giả Kim</div>
       <div class="gold-box">💰 <span id="val-gold">50</span> Vàng</div>
     </header>
 
-    <!-- Modal khi đi nhặt đồ -->
+    <!-- Overlay thám hiểm -->
     <div id="gather-overlay">
       <div class="gather-box">
         <h4 id="gather-name" style="margin-bottom: 8px;">Đang thu hoạch...</h4>
@@ -331,23 +372,23 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 1: QUẦY TIỆM & VẠC PHA CHẾ (GỘP CHUNG) ==================== -->
+    <!-- ==================== TAB 1: BẾP & QUẦY BÁN HÀNG ==================== -->
     <div id="view-shop" class="tab-view active">
       
-      <!-- Nút Mở / Đóng cửa -->
+      <!-- Nút Đóng / Mở Tiệm -->
       <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.85rem;">Trạng thái quán:</span>
+        <span style="font-size: 0.85rem;">Trạng thái tiệm:</span>
         <button id="btn-toggle-shop" onclick="toggleShop()" style="padding: 6px 12px; font-weight: bold; border-radius: 6px; border: none; background: #22c55e; color: white; cursor: pointer;">
           🔔 MỞ TIỆM BÁN
         </button>
       </div>
 
-      <!-- Khu vực khách đang đứng mua -->
+      <!-- Quầy Khách Đang Đứng -->
       <div class="customer-counter">
         <div class="customer-header">
           <div class="customer-avatar" id="cust-avatar">🧝‍♂️</div>
           <div class="order-bubble">
-            <div id="cust-dialog">Tiệm đang đóng cửa chuẩn bị. Hãy bấm <b>Mở Tiệm Bán</b> khi sẵn sàng!</div>
+            <div id="cust-dialog">Tiệm đang đóng cửa chuẩn bị. Nhấn <b>Mở Tiệm Bán</b> khi sẵn sàng!</div>
             <div class="recipe-req" id="cust-recipe"></div>
           </div>
         </div>
@@ -356,59 +397,68 @@
         </div>
       </div>
 
-      <!-- Khu vực Vạc Nấu & Muỗng Pha Chế -->
+      <!-- Bàn Nấu Thuốc Trực Quan -->
       <div class="brewing-bench">
         <div class="bench-title">
           <span>⚗️ VẠC PHA CHẾ TRỰC TIẾP</span>
-          <span id="recipe-hint" style="font-size: 0.75rem; color: #facc15;"></span>
+          <span style="font-size: 0.72rem; color: #a59fc4;">Chạm vào hộp để thả đồ</span>
         </div>
 
-        <!-- Hình ảnh vạc + muỗng -->
-        <div class="cauldron-area">
-          <div class="cauldron-graphic">
-            <span id="spoon-icon" class="spoon-graphic">🥄</span>
-            🍲
+        <!-- Khung Vạc Nồi & Muỗng (Ảnh thật của bạn) -->
+        <div class="cauldron-stage">
+          <div class="cauldron-container">
+            <!-- Cây muỗng cắm vào lòng vạc -->
+            <img id="spoon-img" class="spoon-img" src="https://i.postimg.cc/52VTVktJ/1000017273-removebg-preview.png" alt="Muỗng">
+            <!-- Vạc nồi thuốc -->
+            <img class="cauldron-img" src="https://i.postimg.cc/rmPNwzCX/1000017272-removebg-preview.png" alt="Vạc">
           </div>
-          <div id="pot-status" class="pot-status-text">Vạc đang trống. Hãy bỏ nguyên liệu vào!</div>
+          <div id="pot-status" class="pot-status-text">Vạc đang trống. Chạm hộp bên dưới để thả đồ!</div>
         </div>
 
-        <!-- 3 Nút bỏ nguyên liệu trực tiếp -->
-        <div style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px;">1. Bấm để thả vào vạc (Kho còn):</div>
-        <div class="ingredient-actions">
-          <button class="btn-ingredient" onclick="dropIngredient('water')">
-            💧 Thả Nước
-            <small>Kho: <span id="cnt-water">2</span></small>
-          </button>
-          <button class="btn-ingredient" onclick="dropIngredient('mushroom')">
-            🍄 Thả Nấm
-            <small>Kho: <span id="cnt-mushroom">2</span></small>
-          </button>
-          <button class="btn-ingredient" onclick="dropIngredient('herb')">
-            🌿 Thả Cỏ
-            <small>Kho: <span id="cnt-herb">2</span></small>
-          </button>
+        <!-- KỆ HỘP NGUYÊN LIỆU CLICKABLE (Dùng ảnh thật của bạn) -->
+        <div class="ingredients-shelf">
+          <!-- Hộp Nước -->
+          <div class="shelf-item" onclick="dropIngredient('water')">
+            <span class="badge" id="cnt-water">2</span>
+            <img src="https://i.postimg.cc/t4jwjmgH/1000017276-removebg-preview.png" alt="Bình nước">
+            <span class="name">Bình Nước</span>
+          </div>
+
+          <!-- Hộp Nấm -->
+          <div class="shelf-item" onclick="dropIngredient('mushroom')">
+            <span class="badge" id="cnt-mushroom">2</span>
+            <img src="https://i.postimg.cc/fRfFTjVF/1000017275-removebg-preview.png" alt="Hộp nấm">
+            <span class="name">Hộp Nấm</span>
+          </div>
+
+          <!-- Hộp Cỏ -->
+          <div class="shelf-item" onclick="dropIngredient('herb')">
+            <span class="badge" id="cnt-herb">2</span>
+            <img src="https://i.postimg.cc/nhJgJwLZ/1000017274-removebg-preview.png" alt="Hộp thảo mộc">
+            <span class="name">Thảo Mộc</span>
+          </div>
         </div>
 
-        <!-- Khuấy vạc -->
-        <div class="stir-box">
+        <!-- Thanh Khuấy và Nút Khuấy -->
+        <div style="margin-bottom: 10px;">
           <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
-            <span>2. Độ sánh mịn của thuốc:</span>
+            <span>Độ nhuyễn của thuốc:</span>
             <b id="stir-val" style="color: #38bdf8;">0%</b>
           </div>
           <div class="gauge-bg">
             <div id="stir-fill" class="stir-fill"></div>
           </div>
-          <button class="btn-stir" onclick="stirPotion()">🥄 KHUẤY VẠC THUỐC</button>
+          <button class="btn-stir" onclick="stirPotion()">🥄 BẤM ĐỂ KHUẤY VẠC</button>
         </div>
 
-        <!-- Giao cho khách -->
+        <!-- Nút Giao Hàng -->
         <button class="btn-deliver" onclick="deliverOrder()">
           ✨ GIAO CHO KHÁCH & NHẬN TIỀN
         </button>
 
         <div class="mini-actions">
           <button class="btn-small" onclick="clearPot()">🧹 Đổ Bỏ Vạc Nấu Lại</button>
-          <span style="font-size: 0.72rem; color: #94a3b8;">Cần đủ đồ + khuấy 100% để giao</span>
+          <span style="font-size: 0.72rem; color: #94a3b8;">Cần đủ đồ + khuấy 100%</span>
         </div>
       </div>
 
@@ -438,7 +488,7 @@
         <div class="map-card" onclick="gather('shop')">
           <div class="icon">🛒</div>
           <div class="name">Lái Buôn</div>
-          <div class="info">Mua sỉ khẩn cấp</div>
+          <div class="info">Mua sỉ (15 Vàng)</div>
         </div>
       </div>
 
@@ -453,7 +503,7 @@
       </div>
     </div>
 
-    <!-- Menu Điều Hướng Đáy -->
+    <!-- Menu Đáy -->
     <div class="bottom-nav">
       <div class="nav-tab active" onclick="switchTab('view-shop', this)">
         <span class="icon">🏪</span>
@@ -467,27 +517,24 @@
   </div>
 
   <script>
-    // --- 1. DỮ LIỆU & KHO ĐỒ ---
+    // --- 1. DỮ LIỆU GAME ---
     let gold = 50;
     const inv = { water: 3, mushroom: 3, herb: 3 };
     let isShopOpen = false;
 
-    // Danh sách món khách có thể gọi
     const RECIPES = {
       heal: { name: "Bình Hồi Phục", water: 1, mushroom: 1, herb: 1, price: 35 },
       mana: { name: "Bình Trí Tuệ", water: 1, mushroom: 0, herb: 2, price: 30 },
       power: { name: "Bình Sức Mạnh", water: 1, mushroom: 2, herb: 0, price: 40 }
     };
 
-    // Vạc đang nấu
     let pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
-
-    // Khách hàng hiện tại
     let currentCustomer = null;
     let customerPatience = 100;
     let patienceTimer = null;
+    let stirTimeout = null;
 
-    // --- 2. ĐIỀU HƯỚNG TAB ---
+    // --- 2. CHUYỂN TAB ---
     function switchTab(viewId, tabEl) {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -495,7 +542,7 @@
       tabEl.classList.add('active');
     }
 
-    // --- 3. ĐÓNG / MỞ TIỆM & KHÁCH HÀNG ---
+    // --- 3. ĐÓNG / MỞ TIỆM ---
     function toggleShop() {
       isShopOpen = !isShopOpen;
       const btn = document.getElementById("btn-toggle-shop");
@@ -533,7 +580,7 @@
       document.getElementById("cust-avatar").innerText = currentCustomer.avatar;
       document.getElementById("cust-dialog").innerHTML = `Cho tôi 1 <b>${recipe.name}</b> nhé!`;
       document.getElementById("cust-recipe").innerHTML = 
-        `👉 <i>Công thức: Cần <b>${recipe.water}💧 Nước + ${recipe.mushroom}🍄 Nấm + ${recipe.herb}🌿 Cỏ</b></i>`;
+        `👉 <i>Yêu cầu: Cần <b>${recipe.water}💧 Nước + ${recipe.mushroom}🍄 Nấm + ${recipe.herb}🌿 Cỏ</b></i>`;
 
       customerPatience = 100;
       clearInterval(patienceTimer);
@@ -543,22 +590,20 @@
 
         if (customerPatience <= 0) {
           clearInterval(patienceTimer);
-          alert("Khách đợi quá lâu nên bực bội bỏ đi rồi!");
+          alert("Khách sốt ruột quá nên đã bực bội bỏ đi rồi!");
           if (isShopOpen) setTimeout(spawnCustomer, 800);
         }
       }, 350);
     }
 
-    // --- 4. THAO TÁC NẤU THUỐC VÀ CÁI VẠC ---
+    // --- 4. THAO TÁC THẢ NGUYÊN LIỆU TỪ HỘP ---
     function dropIngredient(type) {
       if (inv[type] <= 0) {
-        alert("Trong kho đã hết món này! Hãy sang tab 'Hái Đồ' để lấy thêm.");
+        alert("Trong kho đã hết món này! Hãy sang tab 'Hái Đồ' để thu hoạch thêm.");
         return;
       }
-
-      // Giới hạn bỏ tối đa 3 mỗi loại để đỡ lãng phí
       if (pot[type] >= 3) {
-        alert("Vạc đã đầy món này rồi, không nên bỏ thêm!");
+        alert("Vạc đã đầy món này rồi, không nên bỏ thêm lãng phí!");
         return;
       }
 
@@ -568,24 +613,30 @@
       updateInventoryUI();
     }
 
+    // --- 5. ANIMATION MUỖNG KHUẤY TRONG LÒNG NỒI ---
     function stirPotion() {
-      // Điều kiện: phải có nước mới khuấy được
       if (pot.water <= 0) {
-        alert("Chưa thả 💧 Nước suối vào làm dung môi thì sao khuấy được bạn ơi!");
+        alert("Chưa thả Nước vào làm dung môi thì sao khuấy được bạn ơi!");
         return;
       }
       if (pot.mushroom === 0 && pot.herb === 0) {
-        alert("Vạc mới chỉ có nước lã, hãy thả thêm Nấm hoặc Thảo mộc vào rồi khuấy!");
+        alert("Vạc mới chỉ có nước lã, hãy chạm vào Hộp Nấm hoặc Hộp Cỏ để thả vào vạc rồi khuấy!");
         return;
       }
 
-      // Hiệu ứng muỗng lắc lư
-      const spoon = document.getElementById("spoon-icon");
+      // Kích hoạt animation cắm muỗng khuấy sâu vào nồi
+      const spoon = document.getElementById("spoon-img");
+      spoon.classList.remove("stirring");
+      void spoon.offsetWidth; // Trigger reflow
       spoon.classList.add("stirring");
-      setTimeout(() => spoon.classList.remove("stirring"), 350);
 
-      // Tăng thanh khuấy
-      pot.stir = Math.min(100, pot.stir + 18);
+      clearTimeout(stirTimeout);
+      stirTimeout = setTimeout(() => {
+        spoon.classList.remove("stirring");
+      }, 600);
+
+      // Tăng thanh độ sánh
+      pot.stir = Math.min(100, pot.stir + 20);
       document.getElementById("stir-fill").style.width = pot.stir + "%";
       document.getElementById("stir-val").innerText = pot.stir + "%";
 
@@ -594,50 +645,46 @@
 
     function updatePotDisplay() {
       const status = document.getElementById("pot-status");
-      status.innerHTML = `Trong vạc: 💧 ${pot.water} | 🍄 ${pot.mushroom} | 🌿 ${pot.herb}`;
+      status.innerHTML = `Đã bỏ: 💧 ${pot.water} | 🍄 ${pot.mushroom} | 🌿 ${pot.herb}`;
 
       if (pot.stir >= 100) {
-        status.innerHTML += `<br><span style="color: #4ade80;">✨ Đã khuấy chín nhuyễn! Có thể giao!</span>`;
+        status.innerHTML += `<br><span style="color: #4ade80;">✨ Đã khuấy chín sánh mịn! Có thể giao!</span>`;
       }
     }
 
     function clearPot() {
       if (pot.water === 0 && pot.mushroom === 0 && pot.herb === 0) return;
-      if (confirm("Bạn có chắc muốn đổ hết đồ trong vạc để nấu lại từ đầu không?")) {
+      if (confirm("Bạn có muốn dọn sạch vạc để nấu mẻ mới không?")) {
         pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
         document.getElementById("stir-fill").style.width = "0%";
         document.getElementById("stir-val").innerText = "0%";
-        document.getElementById("pot-status").innerText = "Vạc đang trống. Hãy bỏ nguyên liệu vào!";
+        document.getElementById("pot-status").innerText = "Vạc đang trống. Chạm hộp bên dưới để thả đồ!";
       }
     }
 
-    // --- 5. GIAO BÌNH CHO KHÁCH ---
+    // --- 6. GIAO BÌNH CHO KHÁCH ---
     function deliverOrder() {
       if (!isShopOpen || !currentCustomer) {
-        alert("Hiện tại quán chưa có khách nào đang chờ!");
+        alert("Hiện tại chưa mở tiệm hoặc chưa có khách nào đang chờ!");
         return;
       }
 
       const req = currentCustomer.recipe;
 
-      // 1. Kiểm tra nguyên liệu trong vạc
       if (pot.water !== req.water || pot.mushroom !== req.mushroom || pot.herb !== req.herb) {
-        alert(`❌ Sai công thức!\nKhách cần: ${req.water}💧 + ${req.mushroom}🍄 + ${req.herb}🌿\nNhưng trong vạc đang có: ${pot.water}💧 + ${pot.mushroom}🍄 + ${pot.herb}🌿\nHãy bấm 'Đổ Bỏ Vạc' để làm lại.`);
+        alert(`❌ Sai công thức yêu cầu!\nKhách cần: ${req.water}💧 + ${req.mushroom}🍄 + ${req.herb}🌿\nNhưng trong vạc có: ${pot.water}💧 + ${pot.mushroom}🍄 + ${pot.herb}🌿\nHãy bấm 'Đổ Bỏ Vạc' để nấu lại.`);
         return;
       }
 
-      // 2. Kiểm tra độ khuấy
       if (pot.stir < 100) {
-        alert("Chưa khuấy đủ 100%! Thuốc còn lợn cợn chưa hòa tan hết.");
+        alert("Chưa khuấy đủ 100%! Thuốc vẫn còn lợn cợn chưa tan đều.");
         return;
       }
 
-      // Thành công!
       clearInterval(patienceTimer);
       gold += req.price;
-      alert(`🎉 GIAO HÀNG THÀNH CÔNG!\nKhách cực kỳ ưng ý vì làm đúng công thức!\nNhận được: +${req.price} 💰 Vàng.`);
+      alert(`🎉 GIAO HÀNG THÀNH CÔNG!\nKhách cực kỳ hài lòng với mẻ thuốc chuẩn vị!\nNhận được: +${req.price} 💰 Vàng.`);
 
-      // Reset vạc
       pot = { water: 0, mushroom: 0, herb: 0, stir: 0 };
       document.getElementById("stir-fill").style.width = "0%";
       document.getElementById("stir-val").innerText = "0%";
@@ -647,13 +694,13 @@
       if (isShopOpen) setTimeout(spawnCustomer, 900);
     }
 
-    // --- 6. HÁI NGUYÊN LIỆU (TAB BẢN ĐỒ) ---
+    // --- 7. HÁI NGUYÊN LIỆU (TAB BẢN ĐỒ) ---
     function gather(spot) {
       if (spot === 'shop') {
         if (gold >= 15) {
           gold -= 15;
           inv.water++; inv.mushroom++; inv.herb++;
-          alert("Đã mua gói sỉ (1💧 + 1🍄 + 1🌿) với giá 15 vàng!");
+          alert("Đã mua sỉ khẩn cấp (1💧 + 1🍄 + 1🌿) với giá 15 vàng!");
           updateInventoryUI();
         } else {
           alert("Không đủ 15 vàng để mua sỉ!");
